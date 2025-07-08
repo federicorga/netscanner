@@ -65,6 +65,9 @@ function parseSpfRecord(rawSpf) {
 
 
 async function SPFRecordService(domain) {
+  try{
+
+  
   const rawSpf = await getSPFRecord(domain);
 
   if (!rawSpf) {
@@ -78,6 +81,9 @@ async function SPFRecordService(domain) {
     }));
 console.log("\n")
 printCustomTable(table);
+  }
+} catch (error) {
+    console.error(`❗[Error] al procesar el registro SPF para ${domain}:`, error);
   }
 };
 

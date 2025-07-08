@@ -1,5 +1,7 @@
 
+const { companyName } = require("../../config/config.js");
 const { getRegister } = require("../../src/clients/api/DNSClient.js");
+const { consoleStyles } = require("../../utils/systemCommands.js");
 const { isCompanyIP } = require("../../utils/utils.js");
 
 async function getARecord(dominio) {
@@ -13,9 +15,10 @@ async function getARecord(dominio) {
         if (data.Answer) {
             console.log(`\n✅ ${dominio} tiene registros A:`, data.Answer);
             if(isCompanyIP(ip)){
-                console.log(`\n🛰️✅ El dominio ${dominio} está gestionado por Wavenet.`);
+                
+                console.log(`\n🛰️✅ El dominio ${dominio} ${consoleStyles.text.green} está gestionado por ${companyName}.`);
             }else{
-                console.log(`\n🛰️❌ El dominio ${dominio} no parece estar gestionado por Wavenet.`);
+                console.log(`\n🛰️❌ El dominio ${dominio} no parece estar gestionado por ${companyName}.`);
             }
             return true;
         } else {

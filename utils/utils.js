@@ -1,12 +1,13 @@
 const dns = require("dns");
 const net = require('net')
 const tls = require('tls');
-const {arrayWavenetIPs}= require("../config/ipsValue.js");
+const {arrayCompanyIPs}= require("../config/ipsValue.js");
 
 
 
 
 async function getIp(dominio) { // Función para obtener la IP de un dominio
+  try{
     return new Promise((resolve, reject) => {
         const isIp = net.isIP(dominio); // 4 para IPv4, 6 para IPv6, 0 si no es IP
            if (isIp) {
@@ -22,6 +23,10 @@ async function getIp(dominio) { // Función para obtener la IP de un dominio
           });
         }
     });
+  } catch (error) {
+   
+    throw error;
+  };
 };
 
 
@@ -74,8 +79,8 @@ function isCompanyIP(ip) { // Función para verificar si una IP pertenece a la e
 
     const ipParts = ip.split('.').map(Number);
 
-    for (let i = 0; i < arrayWavenetIPs.length; i++) {
-        const [rangeIp, maskStr] = arrayWavenetIPs[i].split('/');
+    for (let i = 0; i < arrayCompanyIPs.length; i++) {
+        const [rangeIp, maskStr] = arrayCompanyIPs[i].split('/');
         const rangeParts = rangeIp.split('.').map(Number);
         const mask = parseInt(maskStr, 10);
 

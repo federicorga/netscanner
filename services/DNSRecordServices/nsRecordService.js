@@ -1,10 +1,12 @@
 
 
 
+
 const { getRegister } = require("../../src/clients/api/DNSClient.js");
 const { getIpInfo } = require("../../src/clients/api/ipInfoClient.js");
 
 const { isCompanyIP } = require("../../utils/utils.js");
+const { consoleStyles } = require("../../utils/systemCommands.js");
 
 
 async function getNsRecord(dominio) {
@@ -39,7 +41,7 @@ async function getNsRecord(dominio) {
       }
 
       if (esWavenet) {
-        console.log(`\n🛰️✅ La gestión de los registros DNS del dominio ${dominio} está a cargo de los servidores de Wavenet.`);
+        console.log(`\n🛰️✅ La gestión de los registros DNS del dominio ${dominio} ${consoleStyles.text.green} está a cargo de los servidores de Wavenet.`);
       } else {
        
         console.log(`\n🛰️❌ La gestión de los registros DNS del dominio ${dominio} no parece estar delegado a Wavenet.`);

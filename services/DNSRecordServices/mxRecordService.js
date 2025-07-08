@@ -1,6 +1,7 @@
 const {getRegister} = require('../../src/clients/api/DNSClient.js');
 const { companyName } = require('../../config/config.js');
 const { isCompanyIP, getPtr } = require('../../utils/utils.js');
+const { consoleStyles } = require('../../utils/systemCommands.js');
 
 const dnsp = require('dns').promises;
 
@@ -57,7 +58,7 @@ async function getMxRecord(dominio) { // Devuelve los registros MX de un Dominio
 
       // Si se detectó que es de la empresa, lo notificamos al final
       if (isCompany) {
-        console.log(`\n🛰️✅ El servicio de correo esta gestionado por ${companyName}.`);
+        console.log(`\n🛰️✅ El servicio de correo ${consoleStyles.text.green} esta gestionado por ${companyName}.`);
       }else {
         console.log(`\n🛰️❌ El servicio de correo no parece estar gestionado por ${companyName}.`);
       }

@@ -1,7 +1,6 @@
 const path = require("path"); 
 const {knownPortsServices}= require("../config/portsConfig.js");
 const { consoleControl, consoleStyles } = require("../utils/systemCommands.js");
-const { setDNSProvider } = require("../src/clients/api/DNSClient.js");
 
 
 
@@ -31,6 +30,8 @@ const listCommands = `
   exit        Sale de la aplicación.
 --------------------------------------------------------------------------------------
   clear       Limpia la pantalla de la terminal.
+--------------------------------------------------------------------------------------
+  provdns     Configura un proveedor DNS para realizar las consultas.
 --------------------------------------------------------------------------------------
   ping        Verifica si el host (IP o dominio) está accesible desde tu red. 
               Usa paquetes ICMP para probar conectividad.

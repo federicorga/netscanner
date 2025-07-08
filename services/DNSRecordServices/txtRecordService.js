@@ -10,7 +10,7 @@ async function getTXTRecords(domain) { // Función para obtener registros TXT de
     console.log("Registros TXT:\n", data.Answer);
   } catch (error) {
 
-    console.error("❗[Error] al obtener los registros TXT:", error);
+     throw error;
   }
 }
 

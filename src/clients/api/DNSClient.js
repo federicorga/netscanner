@@ -14,6 +14,7 @@
 
 
 
+
 // Base class
 class DNSProvider {
 
@@ -44,20 +45,29 @@ class CloudflareDNS extends DNSProvider {
 
 // Función de configuración externa
 function setDNSProvider(providerName) {
+
     switch (providerName.toLowerCase()) {
         case "googledns":
             currentProvider = new GoogleDNS();
+            
             break;
         case "cloudflaredns":
             currentProvider = new CloudflareDNS();
+            
             break;
         default:
             throw new Error(`❗ [Error] Unknown DNS provider: ${providerName}`);
     }
+
+    return currentProvider; // Retorna la instancia del proveedor configurado
 }
 
 // Función principal que parece "global"
 async function getRegister(domain, type) {
+
+     if (!currentProvider) {
+        throw new Error("❗ [Error] DNS provider is not set.");
+    }
     return await currentProvider.resolve(domain, type);
 }
 
