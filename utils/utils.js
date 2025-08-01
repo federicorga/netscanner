@@ -30,6 +30,34 @@ async function getIp(dominio) { // Función para obtener la IP de un dominio
 };
 
 
+
+
+
+function connectionTLS(host, port ,validationConnect=true) {// Esta función establece la conexión TLS y retorna el socket
+  return new Promise((resolve, reject) => {
+    const socket = tls.connect({
+      host,
+      port,
+      servername: host,  // SNI (Server Name Indication)
+      rejectUnauthorized: validationConnect, // Validación del certificado verdadera por defecto para conexiones seguras.
+      timeout: 5000, // Timeout de 5 segundos
+    }, () => {
+      resolve(socket); // Retorna el socket una vez que la conexión se ha establecido
+    });
+
+    socket.on('error', (err) => {
+      reject(`Error en la conexión TLS: ${err.message}`);
+    });
+
+    socket.setTimeout(5000, () => {
+      socket.destroy();
+      reject('Timeout en la conexión TLS');
+    });
+  });
+}
+
+
+
 async function getPtr(ip) { // Función para obtener el PTR (hostname) de una IP mediante DNS-INVERSO
   const esIp = net.isIP(ip);
   if (!esIp) {
@@ -196,20 +224,20 @@ async function getRawSSLCertificate(host, port) { //conecta y obtiene el certifi
       try {
         const cert = socket.getPeerCertificate(true); //el servidor remoto con el que estás haciendo la conexión TLS. El argumento true indica que quieres la cadena completa de certificados 
         if (!cert || !cert.raw) {
-          reject("No se pudo obtener el certificado (raw)");
+          reject("❗[Error] No se pudo obtener el certificado (raw)");
           socket.end();
           return;
         }
         resolve(cert);
         socket.end();
       } catch (e) {
-        reject("Error al obtener certificado: " + e.message);
+        reject("❗[Error] al obtener certificado: " + e.message);
         socket.end();
       }
     });
 
     socket.on('error', (err) => {
-      reject(`Error al conectar por SSL: ${err.message}`);
+      reject(`❗[Error] al conectar por SSL: ${err.message}`);
     });
 
     socket.setTimeout(5000, () => {

@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "pkg . --targets node18-win-x64 --output NetScanner.exe"
   },
+  
   "bin": "netScanner.js",
   "keywords": [],
   "author": "",
@@ -19,7 +20,9 @@
       "ports.js"
     ]
   },
-  "dependencies": {
+
+    
+   "dependencies": {
     "dns2": "^2.1.0",
     "dnsbl": "^4.0.2",
     "smtp-connection": "^4.0.2",

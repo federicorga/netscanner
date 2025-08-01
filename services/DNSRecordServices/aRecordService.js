@@ -1,7 +1,7 @@
 
 const { companyName } = require("../../config/config.js");
 const { getRegister } = require("../../src/clients/api/DNSClient.js");
-const { consoleStyles } = require("../../utils/systemCommands.js");
+
 const { isCompanyIP } = require("../../utils/utils.js");
 
 async function getARecord(dominio) {
@@ -16,13 +16,13 @@ async function getARecord(dominio) {
             console.log(`\n✅ ${dominio} tiene registros A:`, data.Answer);
             if(isCompanyIP(ip)){
                 
-                console.log(`\n🛰️✅ El dominio ${dominio} ${consoleStyles.text.green} está gestionado por ${companyName}.`);
+                console.log(`\n🛰️✅ El dominio ${dominio} tiene alojado su servicio o recurso en ${companyName}.`);
             }else{
-                console.log(`\n🛰️❌ El dominio ${dominio} no parece estar gestionado por ${companyName}.`);
+                console.log(`\n🛰️❌ El dominio ${dominio} no parece tener alojado su servicio o recurso en ${companyName}.`);
             }
             return true;
         } else {
-            console.log(`\n❌ ${dominio} no tiene registros A.`);
+            console.log(`\n❌ No se encontro registro A para el dominio: ${dominio}.`);
             return false;
         }
     } catch (error) {

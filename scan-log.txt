@@ -1,0 +1,12 @@
+[object Object],[object Object],[object Object],[object Object]
+[object Object],[object Object],[object Object],[object Object]
+[object Object],[object Object],[object Object],[object Object]
+
+🔍 Escaneando puertos de entrada en [38;5;208m 🌐 45.173.0.81 [0m con timeout de [38;5;208m4000[0m ms...
+
+✅ Puerto 3306 ABIERTO - MySQL/MariaDB → (puerto de salida local: 61746)
+
+🎯 Escaneo finalizado. 2025-7-28 16:06:22
+
+==================================================
+

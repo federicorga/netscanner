@@ -71,7 +71,7 @@ async function SPFRecordService(domain) {
   const rawSpf = await getSPFRecord(domain);
 
   if (!rawSpf) {
-    console.log(`❌ No se encontró registro SPF para ${domain}`);
+    console.log(`❌ No se encontró registro SPF para el dominio: ${domain}`);
   } else {
     // Transformamos para que printCustomTable reciba las keys que espera
     const table = parseSpfRecord(rawSpf).map(item => ({

@@ -1,6 +1,7 @@
 const path = require("path"); 
 const {knownPortsServices}= require("../config/portsConfig.js");
 const { consoleControl, consoleStyles } = require("../utils/systemCommands.js");
+const { get } = require("https");
 
 
 
@@ -18,98 +19,136 @@ const defaultPorts = knownPortsServices.map(service => service.port);
 const companyName = "Wavenet";
 const companyNameLower = companyName.toLowerCase();
 
+const commands=[
+  { id: 1, name: "help" },
+  { id: 2, name: "exit" },
+  { id: 3, name: "clear" },
+  { id: 4, name: "provdns" },
+  { id: 5, name: "ping" },
+  { id: 6, name: "ip" },
+  { id: 7, name: `ip${companyNameLower}` }, // Alias para ip
+  { id: 8, name: "ipadm" },
+  { id: 9, name: "ipinfo" },
+  { id: 10, name: "whois" },
+  { id: 11, name: "infos" },
+  { id: 12, name: "ptr" },
+  { id: 13, name: "a" },
+  { id: 14, name: "mx" },
+  { id: 15, name: "ns" },
+  { id: 16, name: "cname" },
+  { id: 17, name: "txt" },
+  { id: 18, name: "spf" },
+  { id: 19, name: "dkim" },
+  { id: 20, name: "dmarc" },
+  { id: 21, name: "ssl" },
+  { id: 22, name: "serialss" },
+  { id: 23, name: "portscan" },
+  { id: 24, name: "-td" },
+  {id: 25, name:"-f"}
+]
 
 
+function getCommand(id) {
+  const command = commands.find(cmd => cmd.id === id);
+  if (command) {
+    return `${consoleStyles.text.pink}${command.name}${consoleControl.resetStyle}`;  // Retorna solo el nombre
+  } else {
+    return "Comando no encontrado";  // Si no se encuentra el comando
+  }
+}
 
 const listCommands = `
 ℹ️ ${consoleStyles.text.green} COMANDOS DISPONIBLES:  ${consoleControl.resetStyle}
 
 --------------------------------------------------------------------------------------
-  help        Muestra esta lista de comandos.
+  ${getCommand(1)}       Muestra esta lista de comandos.
 --------------------------------------------------------------------------------------
-  exit        Sale de la aplicación.
+  ${getCommand(2)}        Sale de la aplicación.
 --------------------------------------------------------------------------------------
-  clear       Limpia la pantalla de la terminal.
+  ${getCommand(3)}       Limpia la pantalla de la terminal.
 --------------------------------------------------------------------------------------
-  provdns     Configura un proveedor DNS para realizar las consultas.
+  ${getCommand(4)}     Configura un proveedor DNS para realizar las consultas.
 --------------------------------------------------------------------------------------
-  ping        Verifica si el host (IP o dominio) está accesible desde tu red. 
+  ${getCommand(5)}        Verifica si el host (IP o dominio) está accesible desde tu red. 
               Usa paquetes ICMP para probar conectividad.
               ${consoleStyles.text.gray}Dominio o IP ➔ Respuesta de ping${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ip          Resuelve el dominio a su dirección IP.
+  ${getCommand(6)}          Resuelve el dominio a su dirección IP.
              ${consoleStyles.text.gray} Dominio ➜ IP (lookup DNS) ${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ip${companyNameLower}    Verifica si una IP esta administrado por ${companyName}.
+  ${getCommand(7)}    Verifica si una IP esta administrado por ${companyName}.
                ${consoleStyles.text.gray}IP ➜ ${companyName} - IP administrada${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ipadm       Muestra una lista con todos los rangos de IP administrados por ${companyName}.
+  ${getCommand(8)}       Muestra una lista con todos los rangos de IP administrados por ${companyName}.
 --------------------------------------------------------------------------------------
-  ipinfo      Muestra información detallada de la IP o dominio:
+  ${getCommand(9)}      Muestra información detallada de la IP o dominio:
               ISP, ubicación, ASN, etc. (via ipinfo.io)
               ${consoleStyles.text.gray}Dominio o IP ➔ Información${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  whois       Realiza una consulta WHOIS para obtener información del dominio o IP.
+  ${getCommand(10)}       Realiza una consulta WHOIS para obtener información del dominio o IP.
               Incluye datos de registro, propietario, fechas, etc.
+              
+  ${getCommand(25)}          Se agrega al final de la consulta y muestra todos los campos del registro 
+              WHOIS en formato JSON completo. (Recomendado usar -f para busqueda ip)
               ${consoleStyles.text.gray}Dominio o IP ➔ Información WHOIS${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  infos       Escanea la información del servidor
+  ${getCommand(11)}       Escanea la información del servidor
               (panel de control, sistema operativo, etc.)
               ${consoleStyles.text.gray}Dominio o IP ➔ Información del servidor${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ptr         Realiza una búsqueda inversa de IP y devuelve el 
+  ${getCommand(12)}         Realiza una búsqueda inversa de IP y devuelve el 
               nombre de dominio asociado.
               ${consoleStyles.text.gray}IP ➜ Dominio - registro PTR${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  a           Muestra los registros A de un dominio. Indica la dirección IPv4 a la que 
-              resuelve ese nombre de dominio o subdominio. Indica registro A 
-              asocia un nombre de dominio o subdominio con una dirección IPv4.
+  ${getCommand(13)}           Muestra los registros A de un dominio. Indica la dirección IPv4 a la que 
+              resuelve ese nombre de dominio o subdominio. Indica en donde estan alojados
+              los servicios o recursos del dominio como el Servidor web (hosting). 
               ${consoleStyles.text.gray}Dominio ➔ IP - Registro A${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  mx          Muestra los registros MX de un dominio y rastrea a donde apunta 
+  ${getCommand(14)}          Muestra los registros MX de un dominio y rastrea a donde apunta 
               (incluido PTR para rastreo profundo).
               ${consoleStyles.text.gray}Dominio ➔ Servidores de correo - Registro MX${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ns          Muestra los registros NS. Especifica servidores de nombres autorizados
-              (Servidores DNS autoritativos)para el dominio Indica quien gestiona los servidores DNS
-              autoritativos del dominio.
+  ${getCommand(15)}          Muestra los registros NS. Especifica servidores de nombres autorizados
+              (Servidores DNS autoritativos)para el dominio Indica quien gestiona los 
+              servidores DNS autoritativos del dominio.
               ${consoleStyles.text.gray}Dominio ➔ Servidores de nombres - Registro NS${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  cname       Verifica si el dominio tiene un alias CNAME.
+  ${getCommand(16)}       Verifica si el dominio tiene un alias CNAME.
               ${consoleStyles.text.gray}CNAME ➜ Otro dominio - Registro CNAME${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  txt         Muestra los registros TXT del dominio. Incluye SPF, DKIM, 
+  ${getCommand(17)}         Muestra los registros TXT del dominio. Incluye SPF, DKIM, 
               verificación Google, etc.
               ${consoleStyles.text.gray}Dominio ➔ TXT - Registro TXT${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  spf         Muestra los registros SPF del dominio (Este escrito en TXT). 
+  ${getCommand(18)}         Muestra los registros SPF del dominio (Este escrito en TXT). 
               Devuelve una lista de servidores de correo o rutas indirectas hacia 
               ellos que están autorizados a enviar emails en su nombre.
               ${consoleStyles.text.gray}Dominio ➔ SPF - Registro SPF${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  dkim        Muestra el registro DKIM del dominio.
+  ${getCommand(19)}        Muestra el registro DKIM del dominio.
               Usa claves criptográficas para autenticar que un correo electrónico fue 
               enviado y autorizado por el dueño del dominio, 
               y que no fue modificado en tránsito.  
               Protocolo para autenticar correos usando firmas digitales.
               ${consoleStyles.text.gray}Dominio ➔ DKIM - Registro DKIM${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  dmarc       Muestra el registro DMARC del dominio.
+  ${getCommand(20)}       Muestra el registro DMARC del dominio.
               Política de autenticación y reporte para correos.
               Permite que un dominio especifique a los servidores de correo receptores 
               cómo manejar los correos que parecen venir de su dominio, pero que no 
               pasan ciertas verificaciones de autenticidad (como SPF y DKIM)
               ${consoleStyles.text.gray}Dominio ➔ DMARC - Registro DMARC${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ssl         Verifica el certificado SSL del dominio: CN, emisor, validez, 
+  ${getCommand(21)}         Verifica el certificado SSL del dominio: CN, emisor, validez, 
               estado de confianza, fecha de expiración, etc.
               ${consoleStyles.text.gray}Dominio ➔ Certificado SSL - Registro SSL${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  serialssl   Verifica si un certificado SSL es valido por su número de serie.
+  ${getCommand(22)}   Verifica si un certificado SSL es valido por su número de serie.
               y devuelve la ID del certificado en crt.sh
               ${consoleStyles.text.gray}Serial ➔ ID del certificado - Registro SSL ${consoleControl.resetStyle}          
 --------------------------------------------------------------------------------------
- portscan     Escanea los puertos de un dominio o IP mediante una conexion TCP.
+ ${getCommand(23)}     Escanea los puertos de un dominio o IP mediante una conexion TCP.
     
                📝 Podes ingresar:
                [IP o dominio] [timeout en ms] 
@@ -132,7 +171,7 @@ const listCommands = `
                 Ejemplo J: dominio.com -td email (escanea los puertos de email)
              
 
-  -td          Se agrega en la consulta para colocar el timeout por defecto 
+  ${getCommand(24)}          Se agrega en la consulta para colocar el timeout por defecto 
                que es de 4000ms.
                Ejemplo de uso: dominio.com -td 80,443
                

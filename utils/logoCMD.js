@@ -1,4 +1,4 @@
-const { companyName } = require("../config/config");
+
 
 
 module.exports.logo = `

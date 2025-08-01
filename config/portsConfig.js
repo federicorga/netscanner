@@ -65,6 +65,7 @@
             {port: 9100, name:'RAW Printing Port'},
             { port: 27017, name: 'MongoDB' },
             {port: 32001, name: 'Webmail alternativo (seguro)'},
+            {port: 3389, name: 'RDP - Escritorio Remoto de Windows'},
         ];
 
 

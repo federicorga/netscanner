@@ -1,13 +1,18 @@
 const whois = require('whois-json');
-const { formatDate } = require('../utils/utils');
 const { getRawWhois } = require('../src/clients/servers/whoisClient');
+
 
 const dns = require('dns').promises;
 
 
 
-async function getDomainOwner(domain) {
+async function getDomainOwner(input) {
     try {
+
+            const [domainInput, fullInput] = input.trim().split(" ");
+
+    const domain = domainInput;
+   
         
         const data = await whois(domain); // Obtener datos WHOIS en formato JSON
         const rawData = await getRawWhois(domain); // Obtener WHOIS crudo como texto
@@ -21,17 +26,16 @@ async function getDomainOwner(domain) {
             ipAddress = `Error al resolver IP: ${ipErr.message}`;
         }
 
-        const possibleFields = [
-            'company', 'org', 'organization',
-            'registrant', 'owner', 'registrantOrganization',
-            'registrar', 'registrantName'
+        const possibleFields = [ // Busca campos con los siguentes nombres en el JSON de WHOIS
+            'domainName','domain','company','name', 'org', 'organization','owner', 'registrantOrganization', 'registrantName','registrar','registrant','registrarWhoisServer','registrarUrl','registered','creationDate'
+            ,'created','updatedDate','lastUpdateOfWhoisDatabase','changed','registrarRegistrationExpirationDate','expire','nameServer','nserver'
         ];
 
         const nsFields = ['nameServer', 'nserver', 'Name Server'];
         const foundFields = {};
         const nameServers = [];
 
-        for (const field of possibleFields) {
+        for (const field of possibleFields) { 
             if (data[field]) {
                 foundFields[field] = data[field];
             }
@@ -50,23 +54,17 @@ async function getDomainOwner(domain) {
             }
         }
 
-        const uniqueNS = [...new Set(nameServers.map(ns => ns.trim()))];
 
-        // Fechas del JSON estructurado
-        const created = data.created || data.creationDate || 'No disponible';
-        const updated = data.updated || data.updatedDate || 'No disponible';
-
-        // Buscar expiración manualmente en el texto WHOIS crudo
-        const expirationMatch = rawData.match(/(Registry Expiry Date|Expiration Date|Registrar Registration Expiration Date):\s*(.+)/i);
-        const expires = expirationMatch ? expirationMatch[2].trim() : 'No disponible';
+if(fullInput==='-f'){
+    return {
+        filedsWhois: data,
+    }
+}
 
     return {
-    ...foundFields,
-    ip: ipAddress,
-    nameServers: uniqueNS.length > 0 ? uniqueNS : 'No se encontraron servidores de nombre (NS)',
-    created: formatDate(created),
-    updated: formatDate(updated),
-    expires: formatDate(expires)
+       
+    filedsWhois:foundFields,
+    
 };
 
     } catch (err) {

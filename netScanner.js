@@ -1,6 +1,7 @@
 
 //utils
-const { logo } = require("./utils/logoCMD.js");
+const { logo } = require('./utils/logoCMD.js');
+
 const { clearConsole, consoleStyles, consoleControl} = require('./utils/systemCommands.js');
 const { getIp, isCompanyIP } = require("./utils/utils.js");
 //config
@@ -34,6 +35,7 @@ const {updateDNSProvider } = require("./services/selectProviderService.js");
 const { portGroups } = require("./config/portGroups.js");
 
 
+
 //API
 
 setDNSProvider("googledns"); // Configura el proveedor DNS a usar  al iniciar el programa
@@ -54,6 +56,8 @@ function preguntar() {
 
   
   rl.question("\nIngrese comando disponible (o escriba 'help' para mas info) : ", async (input) => {
+
+    
     const command = input.trim().toLowerCase();
 
     switch (command) {
@@ -255,7 +259,7 @@ function preguntar() {
         rl.question("\n🔎 Ingrese (Dominio o IP) para la búsqueda en WHOIS❓: ", async (dominio) => {
           try{
           const whois = await getDomainOwner(dominio.trim());
-          console.log('Registro Whois:', whois);
+          console.log('\nRegistro Whois:', whois.filedsWhois);
         }
         catch (err) {
           console.error("❗ [Error] al obtener el registro WHOIS:", err);}
@@ -284,10 +288,10 @@ function preguntar() {
       case 'ssl':
         rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de certificado SSL 🔏​​: ", async (dominio) => {
           try {
-            const ssl = await pruebaSSL(dominio.trim(), 32001);
+            const ssl = await pruebaSSL(dominio.trim());
             console.log(ssl);
           } catch (err) {
-            console.error("❗ [Error]al obtener la información SSL:", err.message || err);
+            console.error("❗ [Error] al obtener la información SSL:", err.message || err);
           } finally {
             preguntar();
           }

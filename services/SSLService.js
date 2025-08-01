@@ -287,12 +287,20 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
 async function pruebaSSL(hostname, port) {
   try {
     // Obtiene el certificado crudo (leaf)
-    const rawCert = await getRawSSLCertificate(hostname, port);
+    port = port || 443; // Si no se pasa puerto, usar 443 por defecto
+
+  
+    const rawCert = await getRawSSLCertificate(hostname, port);// Asegurarse de que se obtiene el certificado crudo
+ 
 
     // Procesa la cadena a partir del certificado crudo
     const certChainObj = await getCertificateSSLChain(rawCert, port);
 
+ 
+
     const formattedInfo = await formatCertChainInfo(certChainObj, port, 'PLESK');
+
+
 
     return formattedInfo;
   } catch (error) {

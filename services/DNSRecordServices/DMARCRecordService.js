@@ -56,7 +56,7 @@ function parseDMARCRecord(record) {
 async function DMARCRecordService(domain) {
   const raw = await getDMARCRecord(domain);
   if (!raw) {
-    console.log(`❌ No se encontró registro DMARC para ${domain}`);
+    console.log(`❌ No se encontró registro DMARC para el dominio: ${domain}`);
     return;
   }
 
