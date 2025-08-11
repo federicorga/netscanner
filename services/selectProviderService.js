@@ -1,8 +1,10 @@
+
 const { setDNSProvider } = require("../src/clients/api/DNSClient");
+    
 
 
 
-function updateDNSProvider(opcion) {
+async function updateDNSProvider(opcion) {
 
     let providerName;
  try {
@@ -18,6 +20,13 @@ function updateDNSProvider(opcion) {
           console.log("\n✅ Proveedor DNS configurado:", providerName);
          
           break;
+
+        case "3":
+          providerName= setDNSProvider("wavenetdns");
+          console.log("\n✅ Proveedor DNS configurado:", providerName);
+         
+          break;
+  
 
         default:
           console.log("\n❌ Opción inválida.\n");

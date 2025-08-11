@@ -3,6 +3,7 @@ const { consoleStyles, consoleControl } = require("../utils/systemCommands.js");
 const { isPortOpen, getRawSSLCertificate } = require("../utils/utils.js");
 const https = require("https");
 const crypto = require('crypto');
+const { hostname } = require("os");
 
 
 
@@ -121,6 +122,7 @@ stdout.write("⏳ Buscando certificados SSL...");
       // Aquí ahora imprimimos correctamente el puerto
       info += `\n${consoleStyles.text.cyan}→ Puerto ${cert.port} (${serviceName})::${consoleControl.resetStyle}\n`; // Ya no es undefined
       info += `   📄 Dominio (CN): ${cert.subject}\n`;
+      info+= `   Servername: ${cert.setHeader}\n`;
       info += `   🏢 Emisor:${consoleStyles.text.yellow}${cert.issuer}${consoleControl.resetStyle}\n`;
       info += `   🔑 Número de serie Certificado: ${cert.serial}\n`;
       info += `   🔒 Huella SHA1: ${cert.sha1}\n` ;
@@ -269,6 +271,7 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
     
 
     info += `\n${consoleStyles.text.cyan}→ Puerto ${port} (${serviceName})::${consoleControl.resetStyle}\n`;
+    info += `   🖥️ Server: ${consoleStyles.text.magenta}${cert.headers}${consoleControl.resetStyle}\n`;
     info += `   📄 Dominio (CN): ${cert.subject}\n`;
     info += `   🏢 Emisor: ${consoleStyles.text.yellow}${cert.issuer}${consoleControl.resetStyle}\n`;
     info += `   🔑 Número de serie Certificado: ${cert.serial}\n`;
@@ -284,10 +287,16 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
 
 
 
-async function pruebaSSL(hostname, port) {
+async function pruebaSSL(input) {
   try {
+
+      const [hostnameInput, portInput] = input.trim().split(" ");
+
+
+    let hostname = hostnameInput || "localhost"
+    ;
     // Obtiene el certificado crudo (leaf)
-    port = port || 443; // Si no se pasa puerto, usar 443 por defecto
+    let port = portInput || 443; // Si no se pasa puerto, usar 443 por defecto
 
   
     const rawCert = await getRawSSLCertificate(hostname, port);// Asegurarse de que se obtiene el certificado crudo

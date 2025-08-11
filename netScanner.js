@@ -30,7 +30,7 @@ const { DKIMLookupService } = require("./services/DNSRecordServices/DKIMRecordSe
 const { DMARCRecordService } = require("./services/DNSRecordServices/DMARCRecordService.js");
 const { getIpInfo, mostrarIpInfo } = require("./src/clients/api/ipInfoClient.js");
 const { getBannersFromInput } = require("./utils/grabBanner.js");
-const { setDNSProvider } = require("./src/clients/api/DNSClient.js");
+const { setDNSProvider, checkDNSHealth } = require("./src/clients/api/DNSClient.js");
 const {updateDNSProvider } = require("./services/selectProviderService.js");
 const { portGroups } = require("./config/portGroups.js");
 
@@ -102,10 +102,11 @@ function preguntar() {
         break;
 
 
-         case 'provdns':
+   case 'provdns':
             console.log("🔧 Elegí un proveedor DNS:");
-            console.log("1️⃣  GoogleDNS");
-            console.log("2️⃣  CloudflareDNS");
+            console.log("1️  GoogleDNS");
+            console.log("2  CloudflareDNS");
+            console.log("3  WavenetDNS");
 
             rl.question("➡️ Ingresá el número de la opción: ", (input) => {
           updateDNSProvider(input.trim());
@@ -113,6 +114,24 @@ function preguntar() {
           preguntar();
             });
         break;
+
+
+  case 'checkdns':
+  rl.question("\n🔎 Ingrese la IP del servidor DNS a chequear si esta activo 🖧: ", async (dnsIP) => {
+    try {
+      
+      const isHealthy = await checkDNSHealth(dnsIP.trim(), "example.com", "A");
+      if (isHealthy) {
+        console.log("✅ El servidor DNS está operativo.");
+      } else {
+        console.log("❌ El servidor DNS NO responde. Puede que la IP ingresada no sea un servidor DNS válido o configurado.");
+      }
+    } catch (err) {
+      console.error("❗ [Error] al chequear el servidor DNS:", err);
+    }
+    preguntar();
+  });
+  break;
 
 
      

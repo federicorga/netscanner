@@ -1,19 +1,9 @@
-/*async function getRegister(domain, register) {
-    // Devuelve el registro de un dominio
-    const registerResponse = await fetch(`https://dns.google/resolve?name=${domain}&type=${register}`);
-    
-    // Asegúrate de que la respuesta es válida antes de intentar parsear el JSON
-    if (!registerResponse.ok) {
-        throw new Error(`❗ [Error] fetching data: ${registerResponse.statusText}`);
-    }
-
-    const registerData = await registerResponse.json(); // Usamos registerResponse, no ipResponse
-
-    return registerData; // ✅ Devuelve el objeto registro completo
-};*/
 
 
 
+const DNS = require('dns2');
+
+let currentProvider = null; // Variable para almacenar el proveedor DNS actual
 
 // Base class
 class DNSProvider {
@@ -43,6 +33,20 @@ class CloudflareDNS extends DNSProvider {
     }
 }
 
+// DNS personalizado (como Wavenet)
+class CustomDNS extends DNSProvider {
+    constructor(serverIP) {
+        super();
+        this.client = DNS.UDPClient({ dns: serverIP, port: 53, recursive: true });
+    }
+
+    async resolve(domain, type) {
+        const res = await this.client(domain, type);
+        // Adaptamos para que todas las respuestas tengan .Answer
+        return { Answer: res.answers || [] };
+    }
+}
+
 // Función de configuración externa
 function setDNSProvider(providerName) {
 
@@ -55,6 +59,11 @@ function setDNSProvider(providerName) {
             currentProvider = new CloudflareDNS();
             
             break;
+
+        case "wavenetdns":
+            currentProvider = new CustomDNS("45.173.0.46"); 
+
+            break;  
         default:
             throw new Error(`❗ [Error] Unknown DNS provider: ${providerName}`);
     }
@@ -71,4 +80,18 @@ async function getRegister(domain, type) {
     return await currentProvider.resolve(domain, type);
 }
 
-module.exports = { getRegister, setDNSProvider };
+
+
+async function checkDNSHealth(serverIP, testDomain = "google.com", type = "A", timeoutMs = 2000) {
+    const client = DNS.UDPClient({ dns: serverIP, port: 53, recursive: true });
+    return Promise.race([
+        client(testDomain, type)
+            .then(res => res && res.answers && res.answers.length > 0)
+            .catch(() => false),
+        new Promise(resolve => setTimeout(() => resolve(false), timeoutMs))
+    ]);
+}
+
+
+
+module.exports = { getRegister, setDNSProvider,checkDNSHealth };

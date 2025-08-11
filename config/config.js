@@ -44,7 +44,8 @@ const commands=[
   { id: 22, name: "serialss" },
   { id: 23, name: "portscan" },
   { id: 24, name: "-td" },
-  {id: 25, name:"-f"}
+  {id: 25, name:"-f"},
+  {id: 26, name: "checkdns" }
 ]
 
 
@@ -68,6 +69,9 @@ const listCommands = `
   ${getCommand(3)}       Limpia la pantalla de la terminal.
 --------------------------------------------------------------------------------------
   ${getCommand(4)}     Configura un proveedor DNS para realizar las consultas.
+--------------------------------------------------------------------------------------
+  ${getCommand(26)}    Chequea si el dominio o IP tiene un servidor DNS configurado.
+              ${consoleStyles.text.gray}Dominio o IP ➔ Servidor DNS configurado${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
   ${getCommand(5)}        Verifica si el host (IP o dominio) está accesible desde tu red. 
               Usa paquetes ICMP para probar conectividad.

@@ -1,14 +1,21 @@
-const {getRegister} = require('../../src/clients/api/DNSClient.js');
-const { companyName } = require('../../config/config.js');
-const { isCompanyIP, getPtr } = require('../../utils/utils.js');
-const { consoleStyles } = require('../../utils/systemCommands.js');
+
+const { companyName } = require('../../config/config');
+const { getRegister } = require('../../src/clients/api/DNSClient');
+const { consoleStyles } = require('../../utils/systemCommands');
+const { getPtr, isCompanyIP } = require('../../utils/utils');
+
+
 
 const dnsp = require('dns').promises;
 
 async function getMxRecord(dominio) { // Devuelve los registros MX de un Dominio mediante API de GOOGLE
     try {
       
+    
+    
       const data =  await getRegister(dominio,"MX");
+
+
   
       if (data.Answer) {
         console.log(`\n✅ ${dominio} tiene registros MX:`, data.Answer);

@@ -6,36 +6,32 @@ const { getRegister } = require("../../src/clients/api/DNSClient.js");
 const { getIpInfo } = require("../../src/clients/api/ipInfoClient.js");
 
 const { isCompanyIP } = require("../../utils/utils.js");
-const { consoleStyles } = require("../../utils/systemCommands.js");
+
 const { companyName } = require("../../config/config.js");
 
 
 async function getNsRecord(dominio) {
   try {
-  
-
-    const data= await getRegister(dominio, "NS");
-
- 
-    const domainOwner = await getIpInfo(dominio); // Obtenemos el propietario del dominio
+    const data = await getRegister(dominio, "NS");
+    const domainOwner = await getIpInfo(dominio);
 
     if (data.Answer) {
       let esWavenet = false;
       console.log(`\n✅ ${dominio} tiene registros NS:`, data.Answer);
 
-      for (const ns of data.Answer) { // Verificamos cada registro NS
-        const nsDomain = ns.data.toLowerCase(); // Extraemos el dominio NS
+      for (const ns of data.Answer) {
+        const nsDomain = (ns.data || ns.ns || "").toLowerCase();
 
-        // Ahora realizamos una consulta A para obtener la IP asociada a este servidor N
-        const ipData= await getRegister(nsDomain, "A"); // Obtenemos el registro A del servidor NS
+        if (!nsDomain) continue; // Evitar errores si no hay datos
+
+        const ipData = await getRegister(nsDomain, "A");
 
         if (ipData.Answer) {
           for (const ipRecord of ipData.Answer) {
-            const ip = ipRecord.data;
-            // Pasamos la IP a la función isCompanyIP
+            const ip = ipRecord.data || ipRecord.address;
             if (isCompanyIP(ip)) {
               esWavenet = true;
-              break;  // Si encontramos una IP de Wavenet, no es necesario seguir buscando
+              break;
             }
           }
         }
@@ -44,17 +40,13 @@ async function getNsRecord(dominio) {
       if (esWavenet) {
         console.log(`\n🛰️✅ La gestión/configuración de los registros DNS del dominio ${dominio} está a cargo de ${companyName}.`);
       } else {
-       
         console.log(`\n🛰️❌ La gestión/configuración de los registros DNS del dominio ${dominio} no parece estar a cargo de ${companyName}.`);
-
         console.log(`\n🔍 Entidad que gestiona el dominio: \n${JSON.stringify(domainOwner, null, 2)}\n`);
-       
-       
       }
 
       return true;
     } else {
-      console.log(`\n❌ No se encontro registros NS para el dominio: ${dominio}`);
+      console.log(`\n❌ No se encontraron registros NS para el dominio: ${dominio}`);
       return false;
     }
   } catch (error) {
