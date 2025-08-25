@@ -45,7 +45,8 @@ const commands=[
   { id: 23, name: "portscan" },
   { id: 24, name: "-td" },
   {id: 25, name:"-f"},
-  {id: 26, name: "checkdns" }
+  {id: 26, name: "checkdns" },
+  { id: 27, name: "banner" }
 ]
 
 
@@ -144,6 +145,11 @@ const listCommands = `
               pasan ciertas verificaciones de autenticidad (como SPF y DKIM)
               ${consoleStyles.text.gray}Dominio ➔ DMARC - Registro DMARC${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
+  ${getCommand(27)}       Intenta conectarse a un puerto TCP y leer el banner si existe. 
+             Un banner es el mensaje de bienvenida que un servicio envia al conectarse.
+             Se envia el o los puertos que se desea escanera Ejemplo : 192.168.1.1 22,80,443 
+             ${consoleStyles.text.gray}IP ➔ Banner del servicio - Registro de banner${consoleControl.resetStyle}
+--------------------------------------------------------------------------------------
   ${getCommand(21)}         Verifica el certificado SSL del dominio: CN, emisor, validez, 
               estado de confianza, fecha de expiración, etc.
               ${consoleStyles.text.gray}Dominio ➔ Certificado SSL - Registro SSL${consoleControl.resetStyle}
@@ -158,7 +164,7 @@ const listCommands = `
                [IP o dominio] [timeout en ms] 
                [puertos/rango de puertos/grupo de puertos]port
 
-               grupo de puertos: web, email, panel, sistem, db, remote, ftp, red,
+               grupo de puertos: web, email, panel, ssl, sistem, db, remote, ftp, red,
                infra, other
 
                 Ejemplos de uso:

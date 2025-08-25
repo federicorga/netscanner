@@ -81,7 +81,7 @@ function preguntar() {
 
       case 'portscan':
       
-        rl.question("\n🔎 Ingrese (IP o Dominio), tiempo y puertos para escanear 📡​​: ", async (dominio) => {
+        rl.question("\n🔎 Ingrese (IP o Dominio), tiempo y puerto(s) para escanear 📡​​: ", async (dominio) => {
           await getPortsStatus(dominio.trim());
           preguntar();
         });
@@ -275,7 +275,7 @@ function preguntar() {
         break;
 
       case 'whois':
-        rl.question("\n🔎 Ingrese (Dominio o IP) para la búsqueda en WHOIS❓: ", async (dominio) => {
+        rl.question("\n🔎 Ingrese (Dominio o IP) para una consulta WHOIS❓: ", async (dominio) => {
           try{
           const whois = await getDomainOwner(dominio.trim());
           console.log('\nRegistro Whois:', whois.filedsWhois);
@@ -297,8 +297,8 @@ function preguntar() {
         });
         break;
 
-      case 'grab':
-        rl.question("\n🔎 Ingrese (IP y Puerto) para la búsqueda 📓​: ", async (dominio) => {
+      case 'banner':
+        rl.question("\n🔎 Ingrese IP o dominio y puerto(s) para la búsqueda de banner 📓: ", async (dominio) => {
           await getBannersFromInput(dominio.trim());
           preguntar();
         });

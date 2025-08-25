@@ -28,6 +28,22 @@ const portsEmail={
     ]
   };
 
+  const portsSSL = {
+  name: 'ssl',
+  description: 'Puertos de servicios que usan SSL/TLS para conexiones seguras',
+  ports: [
+    { port: 443, name: 'HTTPS' },
+    { port: 465, name: 'SMTPS (SMTP sobre SSL)' },
+    { port: 993, name: 'IMAPS (IMAP sobre SSL)' },
+    { port: 995, name: 'POP3S (POP3 sobre SSL)' },
+    { port: 2083, name: 'cPanel Webmail seguro (HTTPS)' },
+    { port: 2087, name: 'cPanel WHM seguro (HTTPS)' },
+    { port: 2096, name: 'cPanel Webmail alternativo seguro (HTTPS)' },
+    { port: 8443, name: 'Plesk seguro (HTTPS)' },
+    { port: 2484, name: 'Oracle DB SSL' },
+    { port: 636, name: 'LDAP sobre SSL (LDAPS)' }
+  ]
+};
   
   const portsWeb={
     name: 'web',
@@ -165,6 +181,7 @@ const portsEmail={
     ftp: portsFileTransfer,
     red: portsRed,
     infra: portsInfra,
+    ssl: portsSSL,
     other: portsOther
     // Aquí podés agregar más grupos como "ftp", "red", etc.
     // Ejemplo: ftp: portsFileTransfer,

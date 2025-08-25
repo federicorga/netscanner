@@ -12,7 +12,7 @@ const { extractPortsFromStringToArray } = require('../services/portScannerServic
  */
 function grabBanner(ip, port, timeout = 3000) {
   return new Promise((resolve) => {
-    let banner = '';
+    let banner = '🟢 '; // aqui se almacena el baner extraido de el puerto escaneado 
     const socket = new net.Socket();
 
     socket.setTimeout(timeout);
@@ -34,7 +34,7 @@ function grabBanner(ip, port, timeout = 3000) {
     });
 
     socket.on('error', (err) => {
-      resolve(`❌ Error (${port}): ${err.message}`);
+      resolve(`❌ Error - (${port}): ${err.message}`);
     });
 
     socket.on('close', () => {
@@ -44,7 +44,7 @@ function grabBanner(ip, port, timeout = 3000) {
 }
 
 
-async function getBannersFromInput(input) {
+async function getBannersFromInput(input) { //
   const [ipInput, portsInput] = input.trim().split(" ");
 
   const ip = ipInput;
