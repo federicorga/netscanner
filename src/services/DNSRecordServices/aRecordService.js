@@ -1,5 +1,5 @@
 const { companyName } = require("../../config/config.js");
-const { getRegister } = require("../../src/clients/api/DNSClient.js");
+const { getRegister } = require("../../clients/api/DNSClient.js");
 const { isCompanyIP } = require("../../utils/utils.js");
 
 async function getARecord(dominio) {

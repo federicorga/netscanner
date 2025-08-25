@@ -1,38 +1,39 @@
 
 //utils
-const { logo } = require('./utils/logoCMD.js');
+const { logo } = require('./src/utils/logoCMD.js');
 
-const { clearConsole, consoleStyles, consoleControl} = require('./utils/systemCommands.js');
-const { getIp, isCompanyIP } = require("./utils/utils.js");
+const { clearConsole, consoleStyles, consoleControl} = require('./src/utils/systemCommands.js');
+const { getIp, isCompanyIP } = require("./src/utils/utils.js");
 //config
-const { listCommands, companyName, companyNameLower } = require('./config/config.js');
-const {arrayCompanyIPs} = require("./config/ipsValue.js"); 
+const { listCommands, companyName, companyNameLower } = require('./src/config/config.js');
+const {arrayCompanyIPs} = require("./src/config/ipsValue.js"); 
 
 
 //Controladores
-const { StartCLI } = require("./controllers/CLIController.js");
+const { StartCLI } = require('./src/controllers/CLIController.js');
 
 //Servicos
-const { getPortsStatus } = require("./services/portScannerService.js");
-const { pingHost } = require("./services/pingService.js");
-const { getMxRecord, tracerMxMailServiceProvider } = require("./services/DNSRecordServices/mxRecordService.js");
-const { getNsRecord } = require("./services/DNSRecordServices/nsRecordService.js");
-const { getARecord } = require("./services/DNSRecordServices/aRecordService.js");
-const { getCnameRecord } = require("./services/DNSRecordServices/cnameRecordService.js");
-const { getPtrRecord } = require("./services/DNSRecordServices/ptrRecordService.js");
-const { getTXTRecords } = require("./services/DNSRecordServices/txtRecordService.js");
-const { scanServerInfo } = require("./services/scanServerService.js");
-const { getCrtShIdFromSHA1, pruebaSSL} = require("./services/SSLService.js");
-const { checkBlacklist } = require("./services/blackListService.js");
-const { getDomainOwner } = require("./services/whoisService.js");
-const {SPFRecordService } = require("./services/DNSRecordServices/SPFRecordService.js");
-const { DKIMLookupService } = require("./services/DNSRecordServices/DKIMRecordService.js");
-const { DMARCRecordService } = require("./services/DNSRecordServices/DMARCRecordService.js");
+const { getPortsStatus } = require("./src/services/portScannerService.js");
+const { pingHost } = require("./src/services/pingService.js");
+const { getMxRecord, tracerMxMailServiceProvider } = require("./src/services/DNSRecordServices/mxRecordService.js");
+const { getNsRecord } = require("./src/services/DNSRecordServices/nsRecordService.js");
+const { getARecord } = require("./src/services/DNSRecordServices/aRecordService.js");
+const { getCnameRecord } = require("./src/services/DNSRecordServices/cnameRecordService.js");
+const { getPtrRecord } = require("./src/services/DNSRecordServices/ptrRecordService.js");
+const { getTXTRecords } = require("./src/services/DNSRecordServices/txtRecordService.js");
+const { scanServerInfo } = require("./src/services/scanServerService.js");
+const { getCrtShIdFromSHA1, pruebaSSL} = require("./src/services/SSLService.js");
+const { checkBlacklist } = require("./src/services/blackListService.js");
+const { getDomainOwner } = require("./src/services/whoisService.js");
+const {SPFRecordService } = require("./src/services/DNSRecordServices/SPFRecordService.js");
+const { DKIMLookupService } = require("./src/services/DNSRecordServices/DKIMRecordService.js");
+const { DMARCRecordService } = require("./src/services/DNSRecordServices/DMARCRecordService.js");
 const { getIpInfo, mostrarIpInfo } = require("./src/clients/api/ipInfoClient.js");
-const { getBannersFromInput } = require("./utils/grabBanner.js");
+const { getBannersFromInput } = require("./src/utils/grabBanner.js");
 const { setDNSProvider, checkDNSHealth } = require("./src/clients/api/DNSClient.js");
-const {updateDNSProvider } = require("./services/selectProviderService.js");
-const { portGroups } = require("./config/portGroups.js");
+const {updateDNSProvider } = require("./src/services/selectProviderService.js");
+const { portGroups } = require("./src/config/portGroups.js");
+
 
 
 

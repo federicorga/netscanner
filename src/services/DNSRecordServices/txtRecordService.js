@@ -1,4 +1,4 @@
-const { getRegister } = require("../../src/clients/api/DNSClient");
+const { getRegister } = require("../../clients/api/DNSClient");
 
 
 async function getTXTRecords(domain) { // Función para obtener registros TXT de un dominio

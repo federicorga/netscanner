@@ -1,7 +1,7 @@
 const path = require("path"); 
 const {knownPortsServices}= require("../config/portsConfig.js");
 const { consoleControl, consoleStyles } = require("../utils/systemCommands.js");
-const { get } = require("https");
+
 
 
 
@@ -145,20 +145,20 @@ const listCommands = `
               pasan ciertas verificaciones de autenticidad (como SPF y DKIM)
               ${consoleStyles.text.gray}Dominio ➔ DMARC - Registro DMARC${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ${getCommand(27)}       Intenta conectarse a un puerto TCP y leer el banner si existe. 
-             Un banner es el mensaje de bienvenida que un servicio envia al conectarse.
-             Se envia el o los puertos que se desea escanera Ejemplo : 192.168.1.1 22,80,443 
-             ${consoleStyles.text.gray}IP ➔ Banner del servicio - Registro de banner${consoleControl.resetStyle}
+  ${getCommand(27)}      Intenta conectarse a un puerto TCP y leer el banner si existe. 
+              Un banner es el mensaje de bienvenida que un servicio envia al conectarse.
+              Se envia el o los puertos que se desea escanera Ejemplo : 192.168.1.1 22,80,443 
+              ${consoleStyles.text.gray}IP ➔ Banner del servicio - Registro de banner${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
   ${getCommand(21)}         Verifica el certificado SSL del dominio: CN, emisor, validez, 
               estado de confianza, fecha de expiración, etc.
               ${consoleStyles.text.gray}Dominio ➔ Certificado SSL - Registro SSL${consoleControl.resetStyle}
 --------------------------------------------------------------------------------------
-  ${getCommand(22)}   Verifica si un certificado SSL es valido por su número de serie.
+  ${getCommand(22)}    Verifica si un certificado SSL es valido por su número de serie.
               y devuelve la ID del certificado en crt.sh
               ${consoleStyles.text.gray}Serial ➔ ID del certificado - Registro SSL ${consoleControl.resetStyle}          
 --------------------------------------------------------------------------------------
- ${getCommand(23)}     Escanea los puertos de un dominio o IP mediante una conexion TCP.
+  ${getCommand(23)}    Escanea los puertos de un dominio o IP mediante una conexion TCP.
     
                📝 Podes ingresar:
                [IP o dominio] [timeout en ms] 

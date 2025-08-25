@@ -1,7 +1,8 @@
 
 const { companyName } = require('../../config/config');
-const { getRegister } = require('../../src/clients/api/DNSClient');
+const { getRegister } = require('../../clients/api/DNSClient');
 const { consoleStyles } = require('../../utils/systemCommands');
+
 const { getPtr, isCompanyIP } = require('../../utils/utils');
 
 

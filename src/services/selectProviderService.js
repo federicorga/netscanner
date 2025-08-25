@@ -1,5 +1,5 @@
 
-const { setDNSProvider } = require("../src/clients/api/DNSClient");
+const { setDNSProvider } = require("../clients/api/DNSClient");
     
 
 

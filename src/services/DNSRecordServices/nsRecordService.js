@@ -1,9 +1,5 @@
-
-
-
-
-const { getRegister } = require("../../src/clients/api/DNSClient.js");
-const { getIpInfo } = require("../../src/clients/api/ipInfoClient.js");
+const { getRegister } = require("../../clients/api/DNSClient.js");
+const { getIpInfo } = require("../../clients/api/ipInfoClient.js");
 
 const { isCompanyIP } = require("../../utils/utils.js");
 

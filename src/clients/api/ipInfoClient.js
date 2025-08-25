@@ -1,6 +1,6 @@
 
 const net = require("net");
-const { getIp } = require("../../../utils/utils");
+const { getIp } = require("../../utils/utils");
 
 async function getIpInfo(ip) {
 
