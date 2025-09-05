@@ -1,5 +1,5 @@
 const { defaultTimeout,logLines } = require("../config/config");
-const { printCustomTable } = require("../utils/table.js");
+
 const { getIp, isPortOpen} = require("../utils/utils.js");
 const {getServerInfo } = require("../utils/utils.js");
 
@@ -67,10 +67,10 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
   { Campo:"💽 Sistema operativo", Valor: osType }
 ];
 
-printCustomTable(tableData, "📌 Información del servidor", "Name", "Value", 2, 2); // Imprime la tabla con los datos
+
     
     logLines.push(tableData);
-
+    console.log(logLines);
     return info; // Devuelves el resultado como un string
   } catch (error) {  
     console.error("Error en scanServerInfo:", error);

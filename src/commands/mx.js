@@ -1,11 +1,12 @@
 const { getMxRecord, tracerMxMailServiceProvider } = require('../services/DNSRecordServices/mxRecordService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'mx',
-    description: 'Busca los registros MX de un dominio.',
+    description: 'Devuelve los registros MX de un dominio.',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de registros MX 📧: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros MX 📧: ")), async (dominio) => {
                 try {
                     const tieneMX = await getMxRecord(dominio.trim());
                     if (tieneMX) await tracerMxMailServiceProvider(dominio.trim());

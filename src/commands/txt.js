@@ -1,11 +1,12 @@
 const { getTXTRecords } = require('../services/DNSRecordServices/txtRecordService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'txt',
-    description: 'Busca los registros TXT de un dominio.',
+    description: 'Devuelve los registros TXT de un [Dominio].',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de registros TXT 📜: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros TXT 📜: ")), async (dominio) => {
                 try {
                     await getTXTRecords(dominio.trim());
                 } catch (err) {

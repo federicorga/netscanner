@@ -3,6 +3,8 @@ const path = require('path');
 const { logo } = require('./src/utils/logoCMD.js');
 const { StartCLI } = require('./src/controllers/CLIController.js');
 const { setDNSProvider } = require("./src/clients/api/DNSClient.js");
+const { consoleStyles, consoleControl } = require('./src/utils/systemCommands.js');
+
 
 // Cargar comandos dinámicamente
 const commands = new Map();
@@ -31,8 +33,9 @@ console.log(`${logo}`);
 const rl = StartCLI();
 
 async function preguntar() {
-    rl.question("\nIngrese comando disponible (o escriba 'help' para mas info) : ", async (input) => {
-        const commandName = input.trim().toLowerCase(); 
+    const prompt = `\n${consoleStyles.text.gray}netscanner${consoleControl.resetStyle} ${consoleStyles.text.lightBlue}›${consoleControl.resetStyle} `;
+    rl.question(prompt, async (input) => {
+        const commandName = input.trim().toLowerCase();
         const command = commands.get(commandName);
 
         if (!command) {

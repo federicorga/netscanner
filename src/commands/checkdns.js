@@ -1,4 +1,5 @@
 const { checkDNSHealth } = require("../clients/api/DNSClient.js");
+const { formatMessage} = require("../utils/systemCommands.js");
 
 
 
@@ -8,7 +9,7 @@ module.exports = {
     description: 'Verifica el estado de un servidor DNS.',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese la IP del servidor DNS a chequear si esta activo 🖧: ", async (dnsIP) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese la [IP] del servidor DNS a chequear si esta activo 🖧: ")), async (dnsIP) => {
                 try {
                     const isHealthy = await checkDNSHealth(dnsIP.trim(), "example.com", "A");
                     if (isHealthy) {

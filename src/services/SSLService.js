@@ -3,7 +3,7 @@ const { consoleStyles, consoleControl } = require("../utils/systemCommands.js");
 const { isPortOpen, getRawSSLCertificate } = require("../utils/utils.js");
 const https = require("https");
 const crypto = require('crypto');
-const { hostname } = require("os");
+
 
 
 

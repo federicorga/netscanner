@@ -1,22 +1,40 @@
-const { printCustomTable } = require('../../utils/table');
+
 
 const dns = require('dns').promises;
-const chalk = require('chalk');
 
 async function getSPFRecord(domain) {
-  try {
+  try{
     const records = await dns.resolveTxt(domain);
     
-    const spfRecords = records
-      .map(txtArray => txtArray.join('')) // Unir fragmentos
+    if(!records){
+      return {
+                success: false,
+                message: `No se encontró registro SPF para el dominio: ${domain}`,
+                data: null,
+                error: { code: 404, detail: 'Registro SPF no existe' }
+            };
+    }
+
+    const spfRecords = records.map(txtArray => txtArray.join('')) // Unir fragmentos
       .filter(record => record.startsWith('v=spf1'));
-if(spfRecords === null){
-  null
-}
-    return spfRecords[0] ;
+
+    if (spfRecords.length === 0) return null;
+    return{
+      success:true,
+      message:`Se encontró registro SPF para el dominio: ${domain}`,
+      data: spfRecords,
+      error:null 
+    }
+
+
   } catch (error) {
-    return console.error(`❗[Error] al obtener el registro SPF para ${domain}:`, error);
+    return {
+      success: false,
+      message: `No se pudo consultar el registro SPF para el dominio: ${domain}`,
+      data: null,
+      error: { code: 500, detail: error.message }
   }
+}
 };
 
 function parseSpfRecord(rawSpf) {
@@ -65,27 +83,19 @@ function parseSpfRecord(rawSpf) {
 
 
 async function SPFRecordService(domain) {
-  try{
 
-  
-  const rawSpf = await getSPFRecord(domain);
+    const raw = await getSPFRecord(domain);
 
-  if (!rawSpf) {
-    console.log(`❌ No se encontró registro SPF para el dominio: ${domain}`);
-  } else {
-    // Transformamos para que printCustomTable reciba las keys que espera
-    const table = parseSpfRecord(rawSpf).map(item => ({
-      Campo: item.campo,
-      Valor: item.valor,
-      Descripción: item.descripcion
-    }));
-console.log("\n")
-printCustomTable(table);
+    const objectSPF= parseSpfRecord(raw.data? raw.data[0] : ''); // Solo analizamos el primer registro SPF si hay varios
+
+     return {
+    success: raw.success,
+    message: raw.message,
+    data: objectSPF, // Devuelve el registro DMARC como objeto {Campo, Valor, Descripcion
+    error:raw.error
+  };
+
   }
-} catch (error) {
-    console.error(`❗[Error] al procesar el registro SPF para ${domain}:`, error);
-  }
-};
 
 module.exports = {SPFRecordService};
 

@@ -1,15 +1,19 @@
 const { SPFRecordService } = require('../services/DNSRecordServices/SPFRecordService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'spf',
-    description: 'Busca los registros SPF de un dominio.',
+    description: 'Devuelve los registros SPF de un [Dominio].',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de registros SPF 📬🗄️: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros SPF 📬🗄️: ")), async (dominio) => {
                 try {
-                    await SPFRecordService(dominio.trim());
+                    const spf= await SPFRecordService(dominio.trim());
+                    if(spf.data!=undefined){
+                    console.table(spf.data);}
+                    else{console.log(spf.message);}
                 } catch (err) {
-                    console.error("❗ [Error] al obtener el registro SPF:", err);
+                    console.error( err);
                 }
                 resolve();
             });

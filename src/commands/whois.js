@@ -1,11 +1,12 @@
 const { getDomainOwner } = require('../services/whoisService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'whois',
-    description: 'Realiza una consulta WHOIS a una IP o dominio.',
+    description: 'Realiza una consulta WHOIS a una [IP o dominio]. Usa -f para obtener registro completa.',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio o IP) para una consulta WHOIS❓: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese (Dominio o IP) para una consulta WHOIS❓: ")), async (dominio) => {
                 try {
                     const whois = await getDomainOwner(dominio.trim());
                     console.log('\nRegistro Whois:', whois.filedsWhois);

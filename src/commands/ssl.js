@@ -1,11 +1,12 @@
 const { pruebaSSL } = require('../services/SSLService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'ssl',
-    description: 'Verifica el certificado SSL de un dominio.',
+    description: 'Devuelve el certificado SSL de un [Dominio].',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de certificado SSL 🔏​​: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de certificado SSL 🔏​​: ")), async (dominio) => {
                 try {
                     const ssl = await pruebaSSL(dominio.trim());
                     console.log(ssl);

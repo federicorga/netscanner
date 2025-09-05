@@ -2,6 +2,7 @@ const { exec } = require('child_process'); // Para ejecutar comandos de sistema
 const { logo } = require('./logoCMD');
 
 
+
 const consoleStyles = { // Estilos de consola
   text: {
     black: "\x1b[30m",
@@ -50,11 +51,56 @@ const consoleControl={ // Comandos de control de consola
   resetConsole: "\x1Bc" // Resetea la consola
 }
 
+
+// Helpers centralizados
+function formatMessage(message) {
+  return `\n${consoleStyles.text.lightBlue}${message}${consoleControl.resetStyle}`;
+}
+
+function formatSuccess(message) {
+  return `\n${consoleStyles.text.green}✅ [OK] ${message}${consoleControl.resetStyle}`;
+}
+
+function formatError(message) {
+  return `\n${consoleStyles.text.red}❗ [Error] ${message}${consoleControl.resetStyle}`;
+}
+
+function formatRequest(message) { //
+  return `\n${consoleStyles.text.lightBlue}${message}${consoleControl.resetStyle}`;
+}
+
+function formatNotFound(message) {
+  return `\n${consoleStyles.text.gray}❌ [No Encontrado] ${message}${consoleControl.resetStyle}`;
+}
+
+
+function formatWarning(message) {
+  return `\n${consoleStyles.text.yellow}⚠️ [Advertencia] ${message}${consoleControl.resetStyle}`;
+}
+
+
+function formatMessage(type, message) {
+    switch (type) {
+        case "success":
+            return formatSuccess(message);
+        case "error":
+            return formatError(message);
+        case "warning":
+            return formatWarning(message);
+        case "not_found":
+            return formatNotFound(message);
+        case "request":
+            return formatRequest(message);
+        default:
+            return message;
+    }
+}
+
 function clearConsole() {//Limpia la consola dependiendo del sistema operativo
   if (process.platform === 'win32') {
     exec('cls', (err, stdout, stderr) => {
       if (err) {
-        console.error("❗[Error] No se pudo limpiar la consola", err);
+        console.error(formatError("No se pudo limpiar la consola"), err);
         return;
       }
       process.stdout.write(consoleControl.resetConsole);  // Enviar código de escape para borrar la consola
@@ -66,4 +112,4 @@ function clearConsole() {//Limpia la consola dependiendo del sistema operativo
   }
 };
 
-module.exports={clearConsole,consoleStyles,consoleControl};
+module.exports={clearConsole,consoleStyles,consoleControl,formatMessage};

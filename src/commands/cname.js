@@ -1,11 +1,12 @@
 const { getCnameRecord } = require('../services/DNSRecordServices/cnameRecordService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'cname',
-    description: 'Busca los registros CNAME de un dominio.',
+    description: 'Devuelve los registros CNAME de un dominio.',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de registros CNAME 🔀: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros CNAME 🔀: ")), async (dominio) => {
                 try {
                     await getCnameRecord(dominio.trim());
                 } catch (err) {

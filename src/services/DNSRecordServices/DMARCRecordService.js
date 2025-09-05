@@ -1,19 +1,48 @@
+
+
 const dns = require('dns').promises;
-const chalk = require('chalk');
-const { printCustomTable } = require('../../utils/table');
+
+
 
 async function getDMARCRecord(domain) {
-  try {
-    const dmarcDomain = `_dmarc.${domain}`;
-    const records = await dns.resolveTxt(dmarcDomain);
-    const dmarcRecord = records
-      .map(r => r.join(''))
-      .find(txt => txt.startsWith('v=DMARC1'));
-    return dmarcRecord || null;
-  } catch {
-    return null;
-  }
-};
+    try {
+        const dmarcDomain = `_dmarc.${domain}`;
+        const records = await dns.resolveTxt(dmarcDomain);
+
+
+        if (!records) {
+            return {
+                success: false,
+                message: `No se encontró registro DMARC para el dominio: ${domain}`,
+                data: null,
+                error: { code: 404, detail: 'Registro DMARC no existe' }
+            };
+        }
+
+        
+        // Buscamos el registro DMARC válido
+        const dmarcRecord = records
+            .map(r => r.join(''))
+            .find(txt => txt.startsWith('v=DMARC1'));
+
+        // Si se encontró el registro
+        return {
+            success: true,
+            message: `Se encontró registro DMARC para el dominio: ${domain}`,
+            data: dmarcRecord ,
+            error: null
+        };
+
+    } catch (err) {
+        // Error de DNS o inesperado
+        return {
+            success: false,
+            message: `No se pudo consultar el registro DMARC para el dominio: ${domain}`,
+            data: null,
+            error: { code: 500, detail: err.message }
+        };
+    }
+}
 
 function parseDMARCRecord(record) {
   const dmarcDescriptions = {
@@ -50,23 +79,20 @@ function parseDMARCRecord(record) {
       Descripcion: descripcion || 'Parámetro no reconocido',
     };
   }).filter(p => p.Campo); // eliminar campos vacíos
-}
+};
 
 
 async function DMARCRecordService(domain) {
   const raw = await getDMARCRecord(domain);
-  if (!raw) {
-    console.log(`❌ No se encontró registro DMARC para el dominio: ${domain}`);
-    return;
-  }
 
-  const tabla = parseDMARCRecord(raw);
+  const objectDMARC = parseDMARCRecord(raw.data); // Convierte el TXT DMARC en un array de objetos {Campo, Valor, Descripcion}
 
-  printCustomTable(tabla, {
-    headerColor: chalk.gray,
-    campoColor: chalk.magenta,
-    valor: chalk.white,
-  });
+    return {
+    success: raw.success,
+    message: raw.message,
+    data: objectDMARC, 
+    error:raw.error
+  };
 }
 
 module.exports = { DMARCRecordService };

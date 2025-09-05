@@ -1,11 +1,12 @@
 const { getPtrRecord } = require('../services/DNSRecordServices/ptrRecordService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'ptr',
-    description: 'Busca el registro PTR de una IP.',
+    description: 'Devuelve el registro PTR de una [IP].',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio o IP) para la búsqueda de Dominio asociado PTR 🔁: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio o IP] para la búsqueda de Dominio asociado PTR 🔁: ")), async (dominio) => {
                 try {
                     const ptr = await getPtrRecord(dominio.trim());
                     console.log(ptr);

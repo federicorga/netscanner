@@ -1,17 +1,18 @@
+const { parse } = require('path');
+
 const dns = require('dns').promises;
-const chalk = require('chalk');
+
 
 // Busca un registro DKIM usando un selector
 async function getDKIMRecord(domain, selector) {
   const dkimDomain = `${selector}._domainkey.${domain}`;
   try {
     const records = await dns.resolveTxt(dkimDomain);
-    const joined = records.map(r => r.join('')).join('');
-    return joined;
+    return records;
   } catch (err) {
     return null;
   }
-}
+};
 
 // Prueba con selectores comunes para encontrar el DKIM
 async function findDKIMSelector(domain) {
@@ -28,27 +29,47 @@ async function findDKIMSelector(domain) {
   }
 
   return null;
+};
+
+
+
+// Convierte un TXT DKIM en objeto {clave: valor}
+function parseDKIMTXT(txtArray) {
+  // txtArray es un array de arrays: [ [ 'v=DKIM1; k=rsa; p=...' ] ]
+  const joined = txtArray.map(part => part.join('')).join(''); // unimos todo en un string
+  const entries = joined.split(';').map(e => e.trim()).filter(Boolean); // separar por ;
+  const obj = {};
+  for (const entry of entries) {
+    const [key, ...rest] = entry.split('=');
+    if (key && rest.length > 0) {
+      obj[key.trim()] = rest.join('=').trim(); // por si hay = en el valor
+    }
+  }
+  return obj;
 }
 
-// Servicio para mostrar resultado de búsqueda DKIM
+
+
+
+// Servicio para analizar y devolver los datos de DKIM
 async function DKIMLookupService(domain) {
   const result = await findDKIMSelector(domain);
 
-  if (result) {
-    console.log(chalk.green(`✅ DKIM encontrado para ${chalk.cyan(domain)} con selector "${chalk.yellow(result.selector)}":\n`));
-  
-console.log(`\nv: Versión del protocolo DKIM, siempre DKIM1.\nk: Algoritmo de clave pública (normalmente "rsa").\np: Clave pública codificada en base64.\n`)
-
-console.log(
-  result.dkim
-    .split(';')
-    .map(s => s.trim())
-    .filter(Boolean)
-    .join(';\n') + ';');
-    
-  } else {
-    console.log(chalk.red(`❌ No se encontró un registro DKIM para ${chalk.cyan(domain)} con los selectores comunes.`));
+  if (!result) {
+    return {
+      success: false,
+      message: `No se encontró un registro DKIM para "${domain}" con los selectores comunes.`,
+      data: null,
+    };
   }
+
+  const objectDKIM= parseDKIMTXT(result.dkim)
+
+  return {
+    success: true,
+    message: `DKIM encontrado para "${domain}" con selector "${result.selector}".`,
+    data: objectDKIM, // Devuelve el registro DKIM como objeto {v, k, p, ...
+  };
 }
 
 module.exports = { DKIMLookupService };

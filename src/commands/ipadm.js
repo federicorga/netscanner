@@ -4,7 +4,7 @@ const { companyName } = require('../config/config.js');
 module.exports = {
     
     name: 'ipadm',
-    description: `Muestra la lista de IPs de ${companyName}.`,
+    description: `Muestra la lista de IPs administradas por ${companyName}.`,
     execute() {
         console.log(`\n✅ Lista de IPs de ${companyName}: `);
         console.log(arrayCompanyIPs);

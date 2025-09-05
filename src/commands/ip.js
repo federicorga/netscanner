@@ -1,3 +1,4 @@
+const { formatMessage} = require("../utils/systemCommands.js");
 const { getIp } = require("../utils/utils.js");
 
 module.exports = {
@@ -5,7 +6,7 @@ module.exports = {
     description: 'Obtiene la IP de un dominio.',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (Dominio) para la búsqueda de IP 📍: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de IP 📍: ")), async (dominio) => {
                 try {
                     const IP = await getIp(dominio.trim());
                     console.log("\nIP:", IP);

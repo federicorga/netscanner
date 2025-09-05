@@ -1,11 +1,12 @@
 const { scanServerInfo } = require('../services/scanServerService.js');
+const { formatMessage} = require('../utils/systemCommands.js');
 
 module.exports = {
     name: 'infos',
     description: 'Obtiene información del servidor asociado a una IP o dominio.',
     execute(rl) {
         return new Promise(resolve => {
-            rl.question("\n🔎 Ingrese (IP o Dominio) para devolver la información del servidor asociado 🖥️: ", async (dominio) => {
+            rl.question(formatMessage("request",("\n🔎 Ingrese [IP o Dominio] para devolver la información del servidor asociado 🖥️: ")), async (dominio) => {
                 try {
                     await scanServerInfo(dominio.trim());
                 } catch (err) {
