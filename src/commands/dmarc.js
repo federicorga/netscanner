@@ -10,6 +10,7 @@ module.exports = {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros DMARC 📧🔐: ")), async (dominio) => {
                 try {
                    const result= await DMARCRecordService(dominio.trim());
+                   
                      console.log('\n' + result.message + '\n');
                     // Creamos la tabla vertical
                     const table = new Table({

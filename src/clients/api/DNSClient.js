@@ -74,12 +74,42 @@ function setDNSProvider(providerName) {
 // Función principal que parece "global"
 async function getRegister(domain, type) {
 
-     if (!currentProvider) {
-        throw new Error("❗ [Error] DNS provider is not set.");
+    if (!currentProvider) {
+        return {
+            success: false,
+            error: "❗ DNS provider is not set.",
+            data: null,
+        };
     }
-    return await currentProvider.resolve(domain, type);
-}
 
+    try {
+        const result = await currentProvider.resolve(domain, type);
+
+        return {
+            success: true,
+            error: null,
+            data: result,
+            meta: {
+                domain,
+                type,
+               
+            }
+        };
+
+    } catch (err) {
+        return {
+            success: false,
+            error: err.message || "Unknown DNS error",
+            data: null,
+            meta: {
+                domain,
+                type,
+
+               
+            }
+        };
+    }
+}
 
 
 async function checkDNSHealth(serverIP, testDomain = "google.com", type = "A", timeoutMs = 2000) {

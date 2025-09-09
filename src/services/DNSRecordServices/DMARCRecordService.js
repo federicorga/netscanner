@@ -7,29 +7,39 @@ const dns = require('dns').promises;
 async function getDMARCRecord(domain) {
     try {
         const dmarcDomain = `_dmarc.${domain}`;
-        const records = await dns.resolveTxt(dmarcDomain);
+
+        const raw = await getRegister(dmarcDomain, "TXT"); // Obtiene todos los TXT del subdominio sin procesar 
 
 
-        if (!records) {
+        if (!raw) {
             return {
                 success: false,
-                message: `No se encontró registro DMARC para el dominio: ${domain}`,
+                message: `No se encontró registro para el dominio: ${domain}`,
                 data: null,
                 error: { code: 404, detail: 'Registro DMARC no existe' }
             };
         }
 
         
-        // Buscamos el registro DMARC válido
-        const dmarcRecord = records
+      // Buscar el registro que comienza con "v=DMARC1"
+        const dmarcData = raw 
             .map(r => r.join(''))
             .find(txt => txt.startsWith('v=DMARC1'));
+
+        if(!dmarcData){
+            return {
+                success: false,
+                message: `No se encontró registro DMARC para el dominio: ${domain}`,
+                data: null,
+                error: { code: 404, detail: 'Registro DMARC no existe' }
+            };
+        }    
 
         // Si se encontró el registro
         return {
             success: true,
             message: `Se encontró registro DMARC para el dominio: ${domain}`,
-            data: dmarcRecord ,
+            data: dmarcData ,
             error: null
         };
 
@@ -44,7 +54,9 @@ async function getDMARCRecord(domain) {
     }
 }
 
-function parseDMARCRecord(record) {
+function parseDMARC(record) { 
+
+   if (!record) return []; // <-- Si no hay registro, devolvemos array vacío
   const dmarcDescriptions = {
     v: 'Versión del protocolo DMARC, siempre "DMARC1".',
     p: {
@@ -82,10 +94,10 @@ function parseDMARCRecord(record) {
 };
 
 
-async function DMARCRecordService(domain) {
-  const raw = await getDMARCRecord(domain);
+async function DMARCRecordService(domain) { 
+  const raw = await getDMARCRecord(domain); // Obtiene el TXT DMARC
 
-  const objectDMARC = parseDMARCRecord(raw.data); // Convierte el TXT DMARC en un array de objetos {Campo, Valor, Descripcion}
+  const objectDMARC = parseDMARC(raw.data); // Convierte el TXT DMARC en un array de objetos {Campo, Valor, Descripcion}
 
     return {
     success: raw.success,

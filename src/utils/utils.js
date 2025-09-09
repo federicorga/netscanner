@@ -95,6 +95,9 @@ function isValidIPV4(ip) { // Función para validar que es una dirección IPv4
     return true;
 };
 
+
+
+
 function isCompanyIP(ip) { // Función para verificar si una IP pertenece a la empresa
   ip = ip.trim(); // Quita espacios adelante o atrás
   
@@ -260,8 +263,25 @@ function formatDate(isoString) {
     return `${day}/${month}/${year}`;
 };
 
+async function normalizeToArray(data) { // convierte diferentes tipos de datos a un array uniforme
+  // Si no hay datos, devolvemos array vacío
+  if (!data) return [];
+
+  // Aseguramos que siempre devolvemos un array de objetos
+  if (Array.isArray(data)) {
+    return data; // ya son registros completos
+  }
+
+  // Caso objeto individual (por ejemplo, Wavenet con { ip })
+  if (typeof data === 'object') {
+    return [data]; // lo envolvemos en un array
+  }
+
+  return [];
+}
 
 
 
 
-module.exports={getIp,isCompanyIP,getPtr,getRawSSLCertificate,getServerInfo,isPortOpen,isPrivateIP,formatDate};
+
+module.exports={getIp,isCompanyIP,getPtr,getRawSSLCertificate,getServerInfo,isPortOpen,isPrivateIP,formatDate,normalizeToArray};
