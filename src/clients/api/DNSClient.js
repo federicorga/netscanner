@@ -6,18 +6,22 @@ const DNS = require('dns2');
 let currentProvider = null; // Variable para almacenar el proveedor DNS actual
 
 // Base class
-class DNSProvider {
-
+class DNSProvider { // Abstract class simula una interfaz
+ 
     async resolve(domain, type) {
-        throw new Error("❗ [Error] Method 'resolve' must be implemented.");
+        throw new Error("Method 'resolve' must be implemented.");
     }
 }
+
+
+
+//=================PROVEDORES==================
 
 // Google provider
 class GoogleDNS extends DNSProvider {
     async resolve(domain, type) {
         const res = await fetch(`https://dns.google/resolve?name=${domain}&type=${type}`);
-        if (!res.ok) throw new Error(`❗ [Error] Google DNS error: ${res.statusText}`);
+        if (!res.ok) throw new Error(`Google DNS error: ${res.statusText}`);
         return res.json();
     }
 }
@@ -28,7 +32,7 @@ class CloudflareDNS extends DNSProvider {
         const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${domain}&type=${type}`, {
             headers: { accept: 'application/dns-json' }
         });
-        if (!res.ok) throw new Error(`❗ [Error] Cloudflare DNS error: ${res.statusText}`);
+        if (!res.ok) throw new Error(`Cloudflare DNS error: ${res.statusText}`);
         return res.json();
     }
 }
@@ -46,6 +50,7 @@ class CustomDNS extends DNSProvider {
         return { Answer: res.answers || [] };
     }
 }
+
 
 // Función de configuración externa
 function setDNSProvider(providerName) {
@@ -65,54 +70,51 @@ function setDNSProvider(providerName) {
 
             break;  
         default:
-            throw new Error(`❗ [Error] Unknown DNS provider: ${providerName}`);
+            throw new Error(`Unknown DNS provider: ${providerName}`);
     }
 
     return currentProvider; // Retorna la instancia del proveedor configurado
 }
 
-// Función principal que parece "global"
-async function getRegister(domain, type) {
 
-    if (!currentProvider) {
-        return {
-            success: false,
-            error: "❗ DNS provider is not set.",
-            data: null,
-        };
+//===================================
+
+
+// Función para obtener registros DNS crudo
+async function getRegister(domain, type) {
+    const provider = currentProvider; // Usamos el proveedor configurado globalmente
+
+    if (!provider) {
+        // Error esperado: proveedor no configurado
+        const err = new Error("DNS provider is not set.");
+        err.data = { meta: { domain, type } }; // incluimos meta dentro de data
+        throw err; // va al catch del caller
     }
 
     try {
-        const result = await currentProvider.resolve(domain, type);
+        const result = await provider.resolve(domain, type);
 
         return {
             success: true,
+            message: `Registros ${type} obtenidos correctamente.`,
             error: null,
             data: result,
-            meta: {
-                domain,
-                type,
-               
-            }
+            meta: { domain, type },
         };
-
     } catch (err) {
+        // Capturamos cualquier error del proveedor
         return {
             success: false,
-            error: err.message || "Unknown DNS error",
+            message: `Error al consultar registros DNS ${type}: ${err.message}`,
+            error: err,
             data: null,
-            meta: {
-                domain,
-                type,
-
-               
-            }
+            meta: { domain, type },
         };
     }
 }
 
-
-async function checkDNSHealth(serverIP, testDomain = "google.com", type = "A", timeoutMs = 2000) {
+// Función para chequear salud del servidor DNS
+async function checkDNSHealth(serverIP, testDomain = "google.com", type = "A", timeoutMs = 2000) { 
     const client = DNS.UDPClient({ dns: serverIP, port: 53, recursive: true });
     return Promise.race([
         client(testDomain, type)

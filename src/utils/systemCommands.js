@@ -71,12 +71,12 @@ function formatRequest(message) { //
 }
 
 function formatNotFound(message) {
-  return `\n${consoleStyles.text.gray}❌ [No Encontrado] ${message}${consoleControl.resetStyle}`;
+  return `\n${consoleStyles.text.gray}❌ [Not found] ${message}${consoleControl.resetStyle}`;
 }
 
 
 function formatWarning(message) {
-  return `\n${consoleStyles.text.yellow}⚠️ [Advertencia] ${message}${consoleControl.resetStyle}`;
+  return `\n${consoleStyles.text.yellow}⚠️ [Warning] ${message}${consoleControl.resetStyle}`;
 }
 
 
