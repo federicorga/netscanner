@@ -1,14 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const { logo } = require('./src/utils/logoCMD.js');
-const { StartCLI } = require('./src/controllers/CLIController.js');
-const { setDNSProvider } = require("./src/clients/api/DNSClient.js");
-const { consoleStyles, consoleControl } = require('./src/utils/systemCommands.js');
-
-
+const { StartCLI } = require('./src/Presentation/CLI/startCLI.js');
+const {setDNSProvider} = require('./src/Infrastructure/repository/clients/api/DNSClient.js');
+const { consoleStyles, consoleControl } = require('./src/Presentation/CLI/systemCommands.js');
 // Cargar comandos dinámicamente
 const commands = new Map();
-const commandsPath = path.join(__dirname, 'src', 'commands');
+const commandsPath = path.join(__dirname, 'src','Presentation','CLI', 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {

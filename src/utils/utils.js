@@ -1,7 +1,8 @@
 const dns = require("dns");
 const net = require('net')
 const tls = require('tls');
-const {arrayCompanyIPs}= require("../config/ipsValue.js");
+const { arrayCompanyIPs } = require("../Infrastructure/config/ipsValue.js");
+
 
 
 

@@ -1,7 +1,7 @@
 
 const net = require('net');
-const { portGroups } = require('../config/portGroups');
-const { extractPortsFromStringToArray } = require('../services/portScannerService');
+const { portGroups } = require('../Infrastructure/config/portGroups.js');
+const { extractPortsFromStringToArray } = require('../Business/services/portScannerService.js');
 
 /**
  * Intenta conectarse a un puerto TCP y leer el banner de bienvenida (si lo hay).
