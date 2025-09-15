@@ -29,7 +29,7 @@ async function pingHost(ipOrDomain) { // Función para hacer ping a una IP o dom
         });
         
     } catch (error) {
-        console.error(`❗ [Error] en la ejecución del comando de ping: ${error.message}`);
+        throw new Error(`No se pudo ejecución el ping: ${error.message}`);
     } 
   };
 

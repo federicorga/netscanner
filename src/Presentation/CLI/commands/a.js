@@ -23,7 +23,8 @@ module.exports = {
 
             if( result.success===false) {
           
-              console.log(formatMessage("not_found", result.message));}
+              console.log(formatMessage("not_found", result.message)); //No se encontro registro A
+            }
          
            
             if (result.data && result.data.length > 0) {
@@ -41,7 +42,7 @@ module.exports = {
                   table.push([key, consoleStyles.text.green + value]);
                 });
 
-                const icon= result.success.esWavenet ?"🛰️ ✅ " : "🛰️ ❌ ";;
+                const icon= result.success.isCompany ?"🛰️ ✅ " : "🛰️ ❌ ";
 
                 console.log(`\nRegistro A 🌐 #${index + 1}:\n`);
                 console.log(table.toString());

@@ -83,8 +83,14 @@ function setDNSProvider(providerName) {
 // Función para obtener registros DNS crudo
 async function getRegister(domain, type) {
     const provider = currentProvider; // Usamos el proveedor configurado globalmente
+
    
     try {
+
+            if (!domain || domain.trim() === '') {
+            const err = new Error("El dominio no puede estar vacío.");
+            throw err;
+        }
 
         if (!provider) {
             // Error esperado: proveedor no configurado
@@ -93,9 +99,6 @@ async function getRegister(domain, type) {
         }
 
         const result = await provider.resolve(domain, type); //si falla va al catch
-
-      
-           
 
         if(result.Answer === undefined || result.Answer === null || result.Answer.length === 0) {
        

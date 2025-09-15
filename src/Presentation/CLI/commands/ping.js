@@ -11,7 +11,7 @@ module.exports = {
                     const resultado = await pingHost(dominio.trim());
                     console.log(resultado);
                 } catch (err) {
-                    console.error("❗ [Error] al hacer ping:", err);
+                    formatMessage("error",`${err.message}`);
                 }
                 resolve();
             });

@@ -15,18 +15,25 @@ async function getIp(dominio) { // Función para obtener la IP de un dominio
             // Si es una IP, la devolvemos tal cual.
             resolve(dominio);
         } else {
-          dns.lookup(dominio, (err, address, family) => {
-              if (err) {
-                  reject(`${err}`);
-              } else {
-                  resolve(address);
-              }
+          dns.lookup(dominio, (err, address) => {
+  
+            if(err){
+             
+              if (err.code === "ENOTFOUND" || err.code === "EAI_AGAIN") {
+              return reject(`Dominio no encontrado: ${dominio}`);
+              }  
+              return reject(`Error al resolver el dominio: ${err.message}`);
+              
+            }
+          // Devolver la IP si se encuentra
+      
+          resolve(address);
           });
         }
     });
   } catch (error) {
-   
-    throw error;
+
+     throw new Error(`Error inesperado al obtener IP: ${error.message}`);
   };
 };
 

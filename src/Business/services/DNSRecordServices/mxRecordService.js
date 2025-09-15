@@ -3,32 +3,40 @@ const { companyName } = require('../../../Infrastructure/config/config.js');
 const { getRegister } = require('../../../Infrastructure/repository/clients/api/DNSClient.js');
 const { consoleStyles } = require('../../../Presentation/CLI/systemCommands.js');
 
-const { getPtr, isCompanyIP } = require('../../../utils/utils.js');
+const { getPtr, isCompanyIP, normalizeToArray } = require('../../../utils/utils.js');
 
 
 
 const dnsp = require('dns').promises;
 
-async function getMxRecord(dominio) { // Devuelve los registros MX de un Dominio mediante API de GOOGLE
+async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio mediante API de GOOGLE
     try {
       
-    
-    
-      const data =  await getRegister(dominio,"MX");
+  const raw =  await getRegister(domain,"MX");
 
 
-  
-      if (data.Answer) {
-        console.log(`\n✅ ${dominio} tiene registros MX:`, data.Answer);
-        return true;
-      } else {
-        console.log(`\n❌ ${dominio} no tiene registros MX.`);
-        return false;
-      }
-    } catch (error) {
-      console.error(`\n❗[Error] al consultar los MX para ${dominio}:`, error);
-      return false;
+    if (raw.success === false) {
+      return {
+        message: raw.message,
+        success: raw.success,
+      };
     }
+    
+    
+     const records = await normalizeToArray(raw.data.Answer);
+    
+     return{
+      success: raw.success,
+      message: raw.message,
+      data: records,
+      error: raw.error,
+      meta: raw.meta
+     }
+
+    
+  } catch (err) {
+    throw new Error(`${err.message}`)
+  }
   };
 
 
@@ -77,5 +85,10 @@ async function getMxRecord(dominio) { // Devuelve los registros MX de un Dominio
   }
 
 
+  async function mxLookupService (domain){
 
-  module.exports={getMxRecord,tracerMxMailServiceProvider};
+  }
+
+
+
+  module.exports={getMxRecord,tracerMxMailServiceProvider,mxLookupService};

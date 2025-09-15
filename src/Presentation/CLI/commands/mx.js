@@ -8,9 +8,10 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros MX 📧: ")), async (dominio) => {
                 try {
-                    const tieneMX = await getMxRecord(dominio.trim());
-                    if (tieneMX) await tracerMxMailServiceProvider(dominio.trim());
-                    console.log('Registro MX:', tieneMX);
+                    const result = await getMxRecord(dominio.trim());
+                    if (result) await tracerMxMailServiceProvider(dominio.trim());
+                    console.log('Registro MX:');
+                    console.table(result.data)
                 } catch (err) {
                     console.error("❗ [Error] al obtener el registro MX:", err);
                 }

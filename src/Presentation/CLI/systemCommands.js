@@ -71,7 +71,7 @@ function formatRequest(message) { //
 }
 
 function formatNotFound(message) {
-  return `\n${consoleStyles.text.gray}❌ [Not found] ${message}${consoleControl.resetStyle}`;
+  return `\n${consoleStyles.text.orange}❌ [Not found] ${message}${consoleControl.resetStyle}`;
 }
 
 
