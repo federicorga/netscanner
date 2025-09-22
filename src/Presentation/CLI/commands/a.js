@@ -3,7 +3,9 @@ const {
   getARecord,
   aLookupService,
 } = require("../../../Business/services/DNSRecordServices/aRecordService.js");
-const { formatMessage, consoleStyles } = require("../../../Presentation/CLI/systemCommands.js");
+const { formatMessage, consoleStyles, colorMap, printHostingCheckMessage } = require("../../../Presentation/CLI/systemCommands.js");
+const { createHorizontalTable } = require("../tableFormat.js");
+const { companyName } = require("../../../Infrastructure/config/config.js");
 
 module.exports = {
   name: "a",
@@ -29,25 +31,10 @@ module.exports = {
            
             if (result.data && result.data.length > 0) {
               console.log(formatMessage("success", result.meta.baseMessage));
-              // Creamos una tabla por cada registro
-              result.data.forEach((record, index) => {
-                const table = new Table({
-                  head: ["Field", "Value"],
-                  colWidths: [10, 40],
-                  wordWrap: true,
-                  style: { head: ["cyan"], border: ["grey"] },
-                });
-
-                Object.entries(record).forEach(([key, value]) => {
-                  table.push([key, consoleStyles.text.green + value]);
-                });
-
-                const icon= result.success.isCompany ?"🛰️ ✅ " : "🛰️ ❌ ";
-
-                console.log(`\nRegistro A 🌐 #${index + 1}:\n`);
-                console.log(table.toString());
-                console.log("\n" + icon + result.message+ "\n");
-              });
+              
+              createHorizontalTable(result.data,"Registro A 🌐 ")
+              printHostingCheckMessage(result);     
+           
             }
           
           } catch (err) {

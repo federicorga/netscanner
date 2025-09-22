@@ -1,6 +1,11 @@
 const Table = require("cli-table3");
+const { consoleStyles, colorMap } = require("./systemCommands");
 
-function createTable(resultData,head = ["filed", "Value"], valueWidthAdjustment = 50, keyWidthAdjustment=5) {
+
+
+
+
+function createTable(resultData,titleTable= "",head = ["filed", "Value"], valueWidthAdjustment = 50, keyWidthAdjustment= 5) {
     // Obtener el ancho de la terminal
     const terminalWidth = process.stdout.columns;
 
@@ -26,10 +31,14 @@ function createTable(resultData,head = ["filed", "Value"], valueWidthAdjustment 
 
         // Agregar las filas a la tabla
         Object.entries(record).forEach(([key, value]) => {
-            table.push([key, value]); // Agregar las claves y valores al arreglo de filas
+            table.push([consoleStyles.text.lightgray + key, consoleStyles.text.green + value]); // Agregar las claves y valores al arreglo de filas
         });
 
-
+        
+      
+        if(titleTable!==false || titleTable!==""){
+            console.log(`\n${consoleStyles.text.lightCyan}${titleTable} #${index + 1}:\n`);
+        }
         console.log(table.toString());  // Mostrar la tabla para el registro actual
 
         // Agregar un salto de línea para separar cada tabla
@@ -37,4 +46,40 @@ function createTable(resultData,head = ["filed", "Value"], valueWidthAdjustment 
     });
 }
 
-module.exports = { createTable };
+
+// Mapa de colores por campo
+
+
+function createHorizontalTable(resultData, titleTable = "") {
+  if (!resultData || resultData.length === 0) {
+    console.log("⚠️ No hay datos para mostrar.");
+    return;
+  }
+
+  const head = Object.keys(resultData[0]);
+
+  const table = new Table({
+    head: head.map(h => (colorMap.__head__||consoleStyles.text.lightgray) + h), // Títulos en gris
+    style: { head: [], border: ["grey"] },
+    wordWrap: true,
+  });
+
+  resultData.forEach(record => {
+    table.push(
+      head.map(key => {
+        const value = String(record[key] ?? "");
+        const color = colorMap[key] || consoleStyles.text.green; // Default verde
+        return color + value;
+      })
+    );
+  });
+
+  if (titleTable) {
+    console.log(`\n${consoleStyles.text.lightCyan}${titleTable}:\n`);
+  }
+
+  console.log(table.toString());
+  console.log("\n");
+}
+
+module.exports = { createTable,createHorizontalTable };

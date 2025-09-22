@@ -1,8 +1,9 @@
 const {nsLookupService } = require('../../../Business/services/DNSRecordServices/nsRecordService.js');
 const { getIpInfo } = require('../../../Infrastructure/repository/clients/api/ipInfoClient.js');
-const { formatMessage, consoleStyles} = require('../../../Presentation/CLI/systemCommands.js');
+const { formatMessage, consoleStyles, printHostingCheckMessage} = require('../../../Presentation/CLI/systemCommands.js');
 
 const Table = require("cli-table3");
+const { createTable, createHorizontalTable } = require('../tableFormat.js');
 
 module.exports = {
     name: 'ns',
@@ -19,24 +20,13 @@ module.exports = {
                     }
 
                     if(result.data && result.data.length >0){
-                    const icon= result.success.isCompany ?"🛰️ ✅ " : "🛰️ ❌ ";
+                  
                     console.log(formatMessage("success", result.meta.baseMessage));
 
-                        result.data.forEach((record, index) => {
-                const table = new Table({
-                  head: ["Field", "Value"],
-                  colWidths: [10, 40],
-                  wordWrap: true,
-                  style: { head: ["cyan"], border: ["grey"] },
-                });
-
-                Object.entries(record).forEach(([key, value]) => {
-                  table.push([key, consoleStyles.text.green + value]);
-                });
-                     console.log(`\nRegistro NS 🌐 #${index + 1}:\n`);
-                    console.log(table.toString());
-                       console.log("\n" + icon + result.message+ "\n");
-                        });
+                    createHorizontalTable(result.data,"Registro NS 🖥️:");
+                    printHostingCheckMessage(result);
+         
+                   
                     if(!result.success.isCompany){  
                         console.log(`\n🔍 Entidad que gestiona el dominio: \n`);
                         const ipInfo= await getIpInfo(result.meta.ip);

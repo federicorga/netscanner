@@ -112,7 +112,7 @@ async function getRegister(domain, type) {
         }
         return {   // Normalizamos la respuesta
             success: true,
-            message: `Registros ${type} encontrado para ${domain}.`,
+            message: `Registro ${type} encontrado para ${domain}.`,
             error: null,
             data: result,
             meta: { domain, type },

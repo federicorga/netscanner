@@ -15,7 +15,7 @@ module.exports = {
 
                    if (result.data && result.data.length > 0) {
               console.log(formatMessage("success", result.meta.baseMessage));
-                createTable(result.data, 50);  
+                createTable(result.data,titleTable="Registro TXT");  
                         // Mostrar la tabla en la consola
             }
 
