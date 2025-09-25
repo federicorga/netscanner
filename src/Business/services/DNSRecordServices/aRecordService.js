@@ -46,7 +46,7 @@ async function getARecord(domain) { //devuelve los registros A de un dominio en 
 async function aLookupService(domain) {
     
     let isCompany = false;
-    let ipEncontrada = null;
+    let ipData = null;
 
     const result = await getARecord(domain);
    
@@ -59,7 +59,7 @@ async function aLookupService(domain) {
         const ip = record.data || record.address;
         if (ip && isCompanyIP(ip)) {
             isCompany = true;
-            ipEncontrada = ip;
+            ipData = ip;
             break;
 
         }

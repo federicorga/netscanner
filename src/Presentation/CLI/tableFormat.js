@@ -52,7 +52,7 @@ function createTable(resultData,titleTable= "",head = ["filed", "Value"], valueW
 
 function createHorizontalTable(resultData, titleTable = "") {
   if (!resultData || resultData.length === 0) {
-    console.log("⚠️ No hay datos para mostrar.");
+    console.log("⚠️ No hay datos para mostrar en Tabla.");
     return;
   }
 

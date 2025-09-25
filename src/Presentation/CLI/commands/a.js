@@ -24,12 +24,13 @@ module.exports = {
             const result = await aLookupService(dominio.trim());
 
             if( result.success===false) {
-          
+        
               console.log(formatMessage("not_found", result.message)); //No se encontro registro A
             }
          
            
             if (result.data && result.data.length > 0) {
+              
               console.log(formatMessage("success", result.meta.baseMessage));
               
               createHorizontalTable(result.data,"Registro A 🌐 ")

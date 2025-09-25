@@ -44,7 +44,7 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
   try {
     const registros = await dnsp.resolveMx(domain);
 
-    const trace = []; // Array de pasos/traza
+    const trace = []; // Array de pasos/traza se almacena el texto
     trace.push({ type: "info", message: `🧭 Analizando destino de MX para ${domain}:` });
 
     let isCompany = false;
@@ -74,16 +74,11 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
       }
     }
 
-    // Mensaje final sobre la empresa
-    if (isCompany) {
-      trace.push({ type: "success", message: `🛰️✅ El servicio de correo está gestionado por ${companyName}.` });
-    } else {
-      trace.push({ type: "warning", message: `🛰️❌ El servicio de correo no parece estar gestionado por ${companyName}.` });
-    }
+  
 
     return {
       success: true,
-      isCompany,
+  
       domain,
       trace, // Aquí está toda la traza
     };
@@ -91,9 +86,9 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
   } catch (error) {
     return {
       success: false,
-      isCompany: false,
+     
       domain,
-      trace: [{ type: "error", message: `❗[Error] al rastrear MX: ${error.message}` }],
+      trace: [{ type: "error", message: `No se puede rastrear el registro MX: ${error.message}` }],
       error,
     };
   }
@@ -101,59 +96,35 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
 
 
 
-  /*
-  
-  async function tracerMxMailServiceProvider(dominio) { //Rastrea el proveedor de servicios de correo electrónico asociado con un dominio, utilizando los registros MX (Mail Exchange) de DNS.
-    try {
-      const registros = await dnsp.resolveMx(dominio);
-      console.log(`\n🧭 Analizando destino de MX para ${dominio}:`);
-  
-      let isCompany = false;  // Variable para determinar si el registro es de la empresa
-  
-      for (const mx of registros) {
-        console.log(`➡️  ${mx.exchange} (prioridad ${mx.priority})`);
-  
-        try {
-          const ips = await dnsp.resolve4(mx.exchange);
-          for (const ip of ips) {
-            console.log(`🌐 IP: ${ip}`);
-            try {
-              const ptr = await getPtr(ip); // Obtener el registro PTR
-              console.log(`🔁 PTR: ${ptr.join(', ')}`);
-              
-              // Verificar si el PTR contiene "la empresa"
-              if (isCompanyIP(ip)) {
-                isCompany = true;  // Marcar que está gestionado por la empresa
-              }
-            } catch (err) {
-              console.log(`⚠️ Sin PTR: ${err.message}`);
-            }
-          }
-        } catch (err) {
-          console.log(`⚠️ No se pudo resolver IP para ${mx.exchange}: ${err.message}`);
-        }
-      }
-
-      // Si se detectó que es de la empresa, lo notificamos al final
-      if (isCompany) {
-        
-        console.log(`\n🛰️✅ El servicio de correo esta gestionado por ${companyName}.`);
-        return true;
-      }else {
-        console.log(`\n🛰️❌ El servicio de correo no parece estar gestionado por ${companyName}.`);
-        return false
-      }
-  
-    } catch (error) {
-      console.error(`❗[Error] al rastrear MX de ${dominio}:`, error.message);
-    }
-  }
-*/
-
   async function mxLookupService (domain){
 
+    let isCompany = false;
+    let ipData = null;
+
+    const mxRecord= await getMxRecord(domain);
+
+    
+
+    if (!mxRecord.success) {
+      return mxRecord // Se envia asi ya que no es un error es una advertencia.
+      //Solo se envia el mensaje y el success=false
+  }
+
+  if (isCompany) {
+    trace.push({ type: "success", message: `\n🛰️✅ El servicio de correo está gestionado por ${companyName}.` });
+  } else {
+    trace.push({ type: "warning", message: `\n🛰️❌ El servicio de correo no parece estar gestionado por ${companyName}.` });
+  }
+
+    const mxTracer=await tracerMxMailServiceProvider(domain);
+
+    return{
+    mxRecord,
+    mxTracer
+    }
+
   }
 
 
 
-  module.exports={getMxRecord,tracerMxMailServiceProvider,mxLookupService};
+  module.exports={mxLookupService};
