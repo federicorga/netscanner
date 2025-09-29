@@ -1,7 +1,8 @@
 
 const { companyName } = require('../../../Infrastructure/config/config.js');
 const { getRegister } = require('../../../Infrastructure/repository/clients/api/DNSClient.js');
-const { consoleStyles } = require('../../../Presentation/CLI/systemCommands.js');
+const mx = require('../../../Presentation/CLI/commands/mx.js');
+
 
 const { getPtr, isCompanyIP, normalizeToArray } = require('../../../utils/utils.js');
 
@@ -30,7 +31,7 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
       message: raw.message,
       data: records,
       error: raw.error,
-      meta: raw.meta
+      meta: {...raw.meta, baseMessage: raw.message}
      }
 
     
@@ -65,7 +66,10 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
             trace.push({ type: "error", message: `⚠️ Sin PTR: ${err.message}`, ip });
           }
 
+        
+
           if (isCompanyIP(ip)) {
+            
             isCompany = true;
           }
         }
@@ -76,14 +80,14 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
 
     // Mensaje final sobre la empresa
     if (isCompany) {
-      trace.push({ type: "success", message: `🛰️✅ El servicio de correo está gestionado por ${companyName}.` });
+       message= `El servicio de correo está gestionado por ${companyName}.` ;
     } else {
-      trace.push({ type: "warning", message: `🛰️❌ El servicio de correo no parece estar gestionado por ${companyName}.` });
+      message= `El servicio de correo no parece estar gestionado por ${companyName}.`;
     }
 
     return {
-      success: true,
-      isCompany,
+      success: {...true,isCompany},
+      message,
       domain,
       trace, // Aquí está toda la traza
     };
@@ -93,66 +97,35 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
       success: false,
       isCompany: false,
       domain,
-      trace: [{ type: "error", message: `❗[Error] al rastrear MX: ${error.message}` }],
+      trace: [{ type: "error", message: `NO se pudo rastrear MX: ${error.message}` }],
       error,
     };
   }
 }
 
 
-
-  /*
-  
-  async function tracerMxMailServiceProvider(dominio) { //Rastrea el proveedor de servicios de correo electrónico asociado con un dominio, utilizando los registros MX (Mail Exchange) de DNS.
-    try {
-      const registros = await dnsp.resolveMx(dominio);
-      console.log(`\n🧭 Analizando destino de MX para ${dominio}:`);
-  
-      let isCompany = false;  // Variable para determinar si el registro es de la empresa
-  
-      for (const mx of registros) {
-        console.log(`➡️  ${mx.exchange} (prioridad ${mx.priority})`);
-  
-        try {
-          const ips = await dnsp.resolve4(mx.exchange);
-          for (const ip of ips) {
-            console.log(`🌐 IP: ${ip}`);
-            try {
-              const ptr = await getPtr(ip); // Obtener el registro PTR
-              console.log(`🔁 PTR: ${ptr.join(', ')}`);
-              
-              // Verificar si el PTR contiene "la empresa"
-              if (isCompanyIP(ip)) {
-                isCompany = true;  // Marcar que está gestionado por la empresa
-              }
-            } catch (err) {
-              console.log(`⚠️ Sin PTR: ${err.message}`);
-            }
-          }
-        } catch (err) {
-          console.log(`⚠️ No se pudo resolver IP para ${mx.exchange}: ${err.message}`);
-        }
-      }
-
-      // Si se detectó que es de la empresa, lo notificamos al final
-      if (isCompany) {
-        
-        console.log(`\n🛰️✅ El servicio de correo esta gestionado por ${companyName}.`);
-        return true;
-      }else {
-        console.log(`\n🛰️❌ El servicio de correo no parece estar gestionado por ${companyName}.`);
-        return false
-      }
-  
-    } catch (error) {
-      console.error(`❗[Error] al rastrear MX de ${dominio}:`, error.message);
-    }
-  }
-*/
-
   async function mxLookupService (domain){
 
-  }
+
+    const result = await getMxRecord(domain);
+
+   
+    if (!result.success) {
+        return result 
+      
+    }
+
+    const mxTrace= await tracerMxMailServiceProvider(domain); // El estado del mensaje es manejado por tracerMXMail
+
+       return {
+            success: mxTrace.success,
+            message: mxTrace.message,
+            data: result.data,
+            error: (result.error||mxTrace.error),
+            meta: { ...result.meta,mxTrace, baseMessage: result.message },
+        };
+
+}
 
 
 

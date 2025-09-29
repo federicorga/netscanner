@@ -4,6 +4,7 @@ const { formatMessage, consoleStyles, printHostingCheckMessage} = require('../..
 
 const Table = require("cli-table3");
 const { createTable, createHorizontalTable } = require('../tableFormat.js');
+const { getDomainWhois } = require('../../../Business/services/whoisService.js');
 
 module.exports = {
     name: 'ns',
@@ -29,8 +30,9 @@ module.exports = {
                    
                     if(!result.success.isCompany){  
                         console.log(`\n🔍 Entidad que gestiona el dominio: \n`);
-                        const ipInfo= await getIpInfo(result.meta.ip);
-                        console.log(ipInfo);
+
+                        const WhoisInfo= await getDomainWhois(dominio.trim());
+                        createTable([WhoisInfo.filedsWhois], "Información WHOIS❓");
                     }
                     
                     

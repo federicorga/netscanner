@@ -1,6 +1,6 @@
 const { knownPortsServices } = require("../../Infrastructure/config/portsConfig.js");
 const { consoleStyles, consoleControl } = require("../../Presentation/CLI/systemCommands.js");
-const { isPortOpen, getRawSSLCertificate } = require("../../utils/utils.js");
+const { isPortOpen, getRawSSLCertificate, getServerInfo } = require("../../utils/utils.js");
 const https = require("https");
 const crypto = require('crypto');
 
@@ -9,7 +9,12 @@ const crypto = require('crypto');
 
 
 async function getSSLCertificateInfo(host, port) {// Función para obtener información del certificado SSL de un host y puerto
+  
+ 
+  
   return new Promise((resolve, reject) => {
+ 
+   
     const socket = tls.connect(
       {
         host,
@@ -41,7 +46,7 @@ async function getSSLCertificateInfo(host, port) {// Función para obtener infor
         let fingerprints;
         try {
           fingerprints = getCertificateFingerprints(cert);
-          
+           
           
           
         } catch (err) {
@@ -53,7 +58,7 @@ async function getSSLCertificateInfo(host, port) {// Función para obtener infor
             subject: cert.subject.CN || "Desconocido",
             issuer: `${cert.issuer.O || ''} ${cert.issuer.CN || ''}`.trim() || "Desconocido", // informacion mas completa del certificado
             serial: cert.serialNumber || "No disponible", //Serial del certificado
-            
+            servername:serverDate,
             valid_from: cert.valid_from,
             valid_to: cert.valid_to,
             valid: socket.authorized ? "Sí✅" : "No❌",
@@ -122,7 +127,7 @@ stdout.write("⏳ Buscando certificados SSL...");
       // Aquí ahora imprimimos correctamente el puerto
       info += `\n${consoleStyles.text.cyan}→ Puerto ${cert.port} (${serviceName})::${consoleControl.resetStyle}\n`; // Ya no es undefined
       info += `   📄 Dominio (CN): ${cert.subject}\n`;
-      info+= `   Servername: ${cert.setHeader}\n`;
+      info+= `   Servername: ${cert.servername}\n`;
       info += `   🏢 Emisor:${consoleStyles.text.yellow}${cert.issuer}${consoleControl.resetStyle}\n`;
       info += `   🔑 Número de serie Certificado: ${cert.serial}\n`;
       info += `   🔒 Huella SHA1: ${cert.sha1}\n` ;
@@ -260,6 +265,7 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
   
 
   for (const cert of certChainObj.chain) {
+  console.log(cert)
     // Suponiendo que esta función obtiene el ID de crt.sh en base al serial (o sha1)
   let idcert = 'No disponible';
 

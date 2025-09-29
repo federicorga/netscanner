@@ -1,5 +1,6 @@
-const { getCnameRecord } = require('../../../Business/services/DNSRecordServices/cnameRecordService.js');
+const {CNAMELookupService } = require('../../../Business/services/DNSRecordServices/cnameRecordService.js');
 const { formatMessage} = require('../../../Presentation/CLI/systemCommands.js');
+const { createHorizontalTable } = require('../tableFormat.js');
 
 module.exports = {
     name: 'cname',
@@ -8,9 +9,22 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros CNAME 🔀: ")), async (dominio) => {
                 try {
-                    await getCnameRecord(dominio.trim());
+                   const result= await CNAMELookupService(dominio.trim());
+ if( result.success===false) {
+          
+              console.log(formatMessage("not_found", result.message));
+            }
+            if (result.data && result.data.length > 0){
+                console.log(formatMessage("success", result.meta.baseMessage));
+                   createHorizontalTable(result.data, "Registro CNAME 🔀");
+            }
+               
+                    
                 } catch (err) {
-                    console.error("❗ [Error] al obtener el registro CNAME:", err);
+                    console.error(
+              `${formatMessage("error", err.message)} `,
+             
+            );
                 }
                 resolve();
             });

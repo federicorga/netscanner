@@ -1,6 +1,8 @@
 
+const { getDomainWhois } = require('../../../Business/services/whoisService.js');
 const { formatMessage} = require('../systemCommands.js');
-const { getDomainOwner} = require('../../../Business/services/WhoisService.js');
+const { createTable } = require('../tableFormat.js');
+
 
 module.exports = {
     name: 'whois',
@@ -9,8 +11,10 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese (Dominio o IP) para una consulta WHOIS❓: ")), async (dominio) => {
                 try {
-                    const whois = await getDomainOwner(dominio.trim());
-                    console.log('\nRegistro Whois:', whois.filedsWhois);
+                    
+                    const whois = await getDomainWhois(dominio.trim());
+                  createTable([whois.filedsWhois], "Registro WHOIS");
+                  
                 } catch (err) {
                     console.error("❗ [Error] al obtener el registro WHOIS:", err);
                 }

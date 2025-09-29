@@ -6,7 +6,7 @@ const dns = require('dns').promises;
 
 
 
-async function getDomainOwner(input) {
+async function getDomainWhois(input) {
     try {
 
             const [domainInput, fullInput] = input.trim().split(" ");
@@ -72,4 +72,4 @@ if(fullInput==='-f'){
     }
 };
 
-module.exports = { getDomainOwner};
+module.exports = { getDomainWhois};

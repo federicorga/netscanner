@@ -1,26 +1,70 @@
 const { getRegister } = require("../../../Infrastructure/repository/clients/api/DNSClient.js");
+const { normalizeToArray } = require("../../../utils/utils.js");
 
 
-async function getCnameRecord(dominio) {
+async function getCNAMERecord(dominio) {
     try {
         
-        const data = await getRegister(dominio, "CNAME");
-  
-        if (data.Answer) {
-            console.log(`\n✅ ${dominio} tiene registros CNAME:`, data.Answer);
-            return true;
-        } else {
-            console.log(`\n❌ No se encontro registro CNAME para el dominio: ${dominio}`);
-            return false;
+        const raw = await getRegister(dominio, "CNAME");
+
+        if (!raw.success) {
+    
+        return {
+        message:raw.message,
+        success:raw.success
+        }; 
         }
-    } catch (error) {
-        console.error(`\n❗[Error] al consultar los registros CNAME para ${dominio}:`, error);
-        return false;
-    }
+        
+
+        const records = await normalizeToArray(raw.data.Answer);
+ return{ 
+        success: raw.success,
+        message: raw.message,
+        data: records,
+        error: raw.error,
+        meta: raw.meta
+    };
+    
+ 
+} catch(err){
+   
+        throw new Error(`${err.message}`)
+    
+};
+       
+      
   };
 
 
-  module.exports = { getCnameRecord };
+  async function CNAMELookupService(domain) {
+
+    const result = await getCNAMERecord(domain);
+
+    
+ if (!result.success) {
+    return{
+        success: result.success,
+        message: `No se encontro registro CNAME para el dominio: ${domain}`,
+        data: result.data, // Devuelvo todas las IPs para referencia
+        error: null,
+        meta: { ...result.meta, baseMessage: result.message },
+    }
+    }
+
+        return {
+            success: result.success,
+            message: (`El dominio ${domain}tiene registros CNAME:`, result.data.Answer),
+            data: result.data,
+            error: null,
+            meta: { ...result.meta, baseMessage: result.message },
+        };
+
+
+    
+  }
+
+
+  module.exports = { CNAMELookupService};
 
 
   
