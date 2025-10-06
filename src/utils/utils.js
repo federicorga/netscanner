@@ -105,7 +105,6 @@ function isValidIPV4(ip) { // Función para validar que es una dirección IPv4
 
 
 
-
 function isCompanyIP(ip) { // Función para verificar si una IP pertenece a la empresa
   ip = ip.trim(); // Quita espacios adelante o atrás
   
@@ -183,12 +182,6 @@ async function getServerInfo(ipOrDomain) {
     return { hostname: "No encontrado" };
   }
 }
-
-
-
-
-
-
 
 
 function isPortOpen  (ip,port,timeout=defaultTimeout) { //verifica si el puerto esta abierto o cerrado mediante una conexion TCP y devuelve true o false

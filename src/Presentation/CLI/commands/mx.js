@@ -11,8 +11,7 @@ module.exports = {
                 try {
                     
                     const result = await mxLookupService(dominio.trim());
-
-                      if( result.success===false) {
+                if( result.success===false) {
           
                 console.log(formatMessage("not_found", result.message)); //No se encontro registro A
                 }
@@ -21,9 +20,6 @@ module.exports = {
                   
                     console.log(formatMessage("success", result.meta.baseMessage));
                     createHorizontalTable(result.data,"Registro MX ✉️:")
-            
-                        
-                
                    
                     for (const step of result.meta.mxTrace.trace) {
                         console.log(step.message);
@@ -32,7 +28,7 @@ module.exports = {
                     printHostingCheckMessage(result.meta.mxTrace);
                 }
                 } catch (err) {
-                    `${formatMessage("error", err.message)} `
+                    console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

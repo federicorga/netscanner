@@ -59,7 +59,6 @@ async function getCNAMERecord(dominio) {
             meta: { ...result.meta, baseMessage: result.message },
         };
 
-
     
   }
 

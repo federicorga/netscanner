@@ -1,6 +1,7 @@
 const Table = require('cli-table3');
 const { DKIMLookupService } = require('../../../Business/services/DNSRecordServices/DKIMRecordService.js');
 const { formatMessage} = require('../../../Presentation/CLI/systemCommands.js');
+const { createHorizontalTable, createTable } = require('../tableFormat.js');
 
 module.exports = {
   name: 'dkim',
@@ -13,23 +14,12 @@ module.exports = {
 
           console.log('\n' + result.message + '\n');
 
-          
-
           if (result.data) {
             console.log(`\nv: Versión del protocolo DKIM, siempre DKIM1.\nk: Algoritmo de clave pública (normalmente "rsa").\np: Clave pública codificada en base64.\n`)
-           console.log(`Registro DKIM:\n`);
-                  const table = new Table({
-              head: ['Campo', 'Valor'],
-                colWidths: [10, 100], // max ancho para "Valor"
-               wordWrap: true,       // hace wrap automático si excede
-              style: { head: ['cyan'], border: ['grey'] }
-            });
+    
+            createTable(result.data, "Registro DKIM")
 
-            Object.entries(result.data).forEach(([key, value]) => {
-              table.push([key, value]);
-            });
-
-            console.log(table.toString());
+        
             console.log('\n🔐 Clave "p" completa :\n', result.data.p);
           }
 

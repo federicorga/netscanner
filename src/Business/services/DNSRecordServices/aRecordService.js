@@ -6,23 +6,15 @@ const { isCompanyIP, normalizeToArray } = require("../../../utils/utils.js");
 //records ("Registros" o "Registros normalizados") es el valor que obtienes después de procesar y normalizar la respuesta raw. Es un array de objetos que contienen los registros DNS de tipo A
 // result ("Resultado") es el objeto final que se retorna desde tu función getARecord. Este objeto contiene tanto la respuesta raw (en forma procesada) como los registros records dentro de una estructura más amigable y útil para los usuarios de tu API o función.
 
-
-
-
-
 async function getARecord(domain) { //devuelve los registros A de un dominio en un array de objetos {name, type, TTL, data} mas informacion
 
     try{
-    const raw = await getRegister(domain, "A"); // Obtiene todos los registros A del dominio sin procesar
+    const raw = await getRegister(domain, "A"); // Obtiene todos los registros A del dominio sin procesar y se encarga de la normalizacion de los datos.
 
     if (!raw.success) {
     
-    return {
-    message:raw.message,
-    success:raw.success
-    }; // Si hubo un error, retorna el objeto de error tal cual aunque no es un error es una advertencia;
+    return raw // Si hubo un error, retorna el objeto de error tal cual aunque no es un error es una advertencia;
     }
-
 
     const records = await normalizeToArray(raw.data.Answer); // Normaliza a array los registros A siempre, si no devuelve []
 
@@ -33,6 +25,16 @@ async function getARecord(domain) { //devuelve los registros A de un dominio en 
         error: raw.error,
         meta: raw.meta
     };
+
+    /* otra forma de devolverlo es esta ya que solo se modifica el data es con los 3 puntos ... trae todo el objeto y permite modificar
+    lo que se necesita de el poniendo abajo la parte del objeto
+
+    return {
+    ...raw,
+    data:recrods
+    }
+
+    */
     
  
 } catch(err){

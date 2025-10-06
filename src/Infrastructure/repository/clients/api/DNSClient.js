@@ -83,10 +83,7 @@ function setDNSProvider(providerName) {
 // Función para obtener registros DNS crudo
 async function getRegister(domain, type) {
     const provider = currentProvider; // Usamos el proveedor configurado globalmente
-
-   
     try {
-
             if (!domain || domain.trim() === '') {
             const err = new Error("El dominio no puede estar vacío.");
             throw err;

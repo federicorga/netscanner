@@ -10,27 +10,23 @@ const { getPtr, isCompanyIP, normalizeToArray } = require('../../../utils/utils.
 
 const dnsp = require('dns').promises;
 
-async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio mediante API de GOOGLE
+async function getMxRecord(domain) {
+
     try {
       
   const raw =  await getRegister(domain,"MX");
 
 
-    if (raw.success === false) {
-      return {
-        message: raw.message,
-        success: raw.success,
-      };
+    if (!raw.success) {
+      return raw;
     }
     
     
      const records = await normalizeToArray(raw.data.Answer);
     
      return{
-      success: raw.success,
-      message: raw.message,
+     ...raw,
       data: records,
-      error: raw.error,
       meta: {...raw.meta, baseMessage: raw.message}
      }
 
@@ -66,7 +62,6 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
             trace.push({ type: "error", message: `⚠️ Sin PTR: ${err.message}`, ip });
           }
 
-        
 
           if (isCompanyIP(ip)) {
             
@@ -108,7 +103,6 @@ async function getMxRecord(domain) { // Devuelve los registros MX de un Dominio 
 
 
     const result = await getMxRecord(domain);
-
    
     if (!result.success) {
         return result 
