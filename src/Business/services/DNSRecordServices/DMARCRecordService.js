@@ -1,37 +1,28 @@
-
-
-const dns = require('dns').promises;
-
-
+const { getRegister } = require("../../../Infrastructure/repository/clients/api/DNSClient");
 
 async function getDMARCRecord(domain) {
     try {
-        const dmarcDomain = `_dmarc.${domain}`;
-
-        const raw = await getRegister(dmarcDomain, "TXT"); // Obtiene todos los TXT del subdominio sin procesar 
-
-
-        if (!raw) {
-            return {
-                success: false,
-                message: `No se encontró registro para el dominio: ${domain}`,
-                data: null,
-                error: { code: 404, detail: 'Registro DMARC no existe' }
-            };
-        }
-
+    const dmarcDomain = `_dmarc.${domain}`;
+    const raw = await getRegister(dmarcDomain, "TXT"); // Obtiene todos los TXT del subdominio sin procesar 
         
+    if (!raw.success) {
+    
+    return raw 
+  }
+
+
       // Buscar el registro que comienza con "v=DMARC1"
-        const dmarcData = raw 
-            .map(r => r.join(''))
-            .find(txt => txt.startsWith('v=DMARC1'));
+       const dmarcData = raw.data.Answer.map(r => r.data.trim()).find(txt => txt.startsWith('v=DMARC1'));
+       
+
 
         if(!dmarcData){
             return {
                 success: false,
                 message: `No se encontró registro DMARC para el dominio: ${domain}`,
                 data: null,
-                error: { code: 404, detail: 'Registro DMARC no existe' }
+                error: 'Registro DMARC no existe',
+                meta: raw.meta
             };
         }    
 
@@ -40,17 +31,13 @@ async function getDMARCRecord(domain) {
             success: true,
             message: `Se encontró registro DMARC para el dominio: ${domain}`,
             data: dmarcData ,
-            error: null
+            error: null,
+            meta: raw.meta
         };
 
     } catch (err) {
-        // Error de DNS o inesperado
-        return {
-            success: false,
-            message: `No se pudo consultar el registro DMARC para el dominio: ${domain}`,
-            data: null,
-            error: { code: 500, detail: err.message }
-        };
+
+       throw new Error(`${err.message}`)
     }
 }
 
@@ -95,15 +82,17 @@ function parseDMARC(record) {
 
 
 async function DMARCRecordService(domain) { 
-  const raw = await getDMARCRecord(domain); // Obtiene el TXT DMARC
 
-  const objectDMARC = parseDMARC(raw.data); // Convierte el TXT DMARC en un array de objetos {Campo, Valor, Descripcion}
+  const result = await getDMARCRecord(domain); // Obtiene el TXT DMARC
+
+  const objectDMARC = parseDMARC(result.data); // Convierte el TXT DMARC en un array de objetos {Campo, Valor, Descripcion}
 
     return {
-    success: raw.success,
-    message: raw.message,
+    success: result.success,
+    message: result.message,
     data: objectDMARC, 
-    error:raw.error
+    error:result.error,
+    meta: result.meta
   };
 }
 

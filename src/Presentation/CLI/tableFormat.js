@@ -48,27 +48,38 @@ function createTable(resultData,titleTable= "",head = ["filed", "Value"], valueW
 
 
 // Mapa de colores por campo
-
-
-function createHorizontalTable(resultData, titleTable = "") {
+function createHorizontalTable(resultData, titleTable = "", maxColumnWidth = 30, customColorMap = {}) {
   if (!resultData || resultData.length === 0) {
     console.log("⚠️ No hay datos para mostrar.");
     return;
   }
 
+  const terminalWidth = process.stdout.columns || 100;
   const head = Object.keys(resultData[0]);
 
+  // Colores combinados: customColorMap tiene prioridad
+  const activeColorMap = { ...colorMap, ...customColorMap };
+
+  const colWidths = head.map((key) => {
+    const maxContentWidth = Math.max(
+      key.length,
+      ...resultData.map((record) => String(record[key] ?? "").length)
+    );
+    return Math.min(maxContentWidth + 2, maxColumnWidth, terminalWidth / head.length);
+  });
+
   const table = new Table({
-    head: head.map(h => (colorMap.__head__||consoleStyles.text.lightgray) + h), // Títulos en gris
+    head: head.map(h => (activeColorMap.__head__ || consoleStyles.text.lightgray) + h),
     style: { head: [], border: ["grey"] },
     wordWrap: true,
+    colWidths: colWidths,
   });
 
   resultData.forEach(record => {
     table.push(
       head.map(key => {
         const value = String(record[key] ?? "");
-        const color = colorMap[key] || consoleStyles.text.green; // Default verde
+        const color = activeColorMap[key] || consoleStyles.text.green;
         return color + value;
       })
     );
@@ -81,5 +92,7 @@ function createHorizontalTable(resultData, titleTable = "") {
   console.log(table.toString());
   console.log("\n");
 }
+
+
 
 module.exports = { createTable,createHorizontalTable };

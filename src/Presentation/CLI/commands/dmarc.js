@@ -1,6 +1,7 @@
 const { DMARCRecordService } = require('../../../Business/services/DNSRecordServices/DMARCRecordService.js');
-const { formatMessage} = require('../../../Presentation/CLI/systemCommands.js');
+const { formatMessage, consoleStyles} = require('../../../Presentation/CLI/systemCommands.js');
 const Table = require('cli-table3'); // <-- importamos cli-table3
+const { createHorizontalTable, createTable } = require('../tableFormat.js');
 
 module.exports = {
     name: 'dmarc',
@@ -12,18 +13,13 @@ module.exports = {
                    const result= await DMARCRecordService(dominio.trim());
                    
                      console.log('\n' + result.message + '\n');
-                    // Creamos la tabla vertical
-                    const table = new Table({
-                    head: ['Campo', 'Valor', 'Descripcion'],
-                    style: { head: ['cyan'], border: ['grey'] }
-                    });
+                   
+                  
+                     createHorizontalTable(result.data, "Registro DMARC 🔐",60,{ Campo:consoleStyles.text.magenta,Descripcion:consoleStyles.text.lightgray});
 
-                    // Agregamos cada objeto como fila
-                    result.data.forEach(row => {
-                    table.push([row.Campo, row.Valor, row.Descripcion]);
-                    });
+                     
 
-                    console.log(table.toString());
+            
 
                 } catch (err) {
                     console.error("❗ [Error] al obtener el registro DMARC:", err);
