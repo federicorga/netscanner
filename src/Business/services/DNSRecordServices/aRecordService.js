@@ -36,7 +36,6 @@ async function getARecord(domain) { //devuelve los registros A de un dominio en 
 
     */
     
- 
 } catch(err){
    
         throw new Error(`${err.message}`)

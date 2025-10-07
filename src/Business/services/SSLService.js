@@ -1,6 +1,6 @@
 const { knownPortsServices } = require("../../Infrastructure/config/portsConfig.js");
 const { consoleStyles, consoleControl } = require("../../Presentation/CLI/systemCommands.js");
-const { isPortOpen, getRawSSLCertificate, getServerInfo } = require("../../utils/utils.js");
+const { isPortOpen, getRawSSLCertificate} = require("../../utils/utils.js");
 const https = require("https");
 const crypto = require('crypto');
 

@@ -1,9 +1,6 @@
 
 const { companyName } = require('../../../Infrastructure/config/config.js');
 const { getRegister } = require('../../../Infrastructure/repository/clients/api/DNSClient.js');
-const mx = require('../../../Presentation/CLI/commands/mx.js');
-
-
 const { getPtr, isCompanyIP, normalizeToArray } = require('../../../utils/utils.js');
 
 
@@ -27,7 +24,6 @@ async function getMxRecord(domain) {
      return{
      ...raw,
       data: records,
-      meta: {...raw.meta, baseMessage: raw.message}
      }
 
     

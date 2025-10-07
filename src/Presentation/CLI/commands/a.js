@@ -1,11 +1,8 @@
-const Table = require("cli-table3");
-const {
-  getARecord,
-  aLookupService,
-} = require("../../../Business/services/DNSRecordServices/aRecordService.js");
-const { formatMessage, consoleStyles, colorMap, printHostingCheckMessage } = require("../../../Presentation/CLI/systemCommands.js");
+
+const {aLookupService} = require("../../../Business/services/DNSRecordServices/aRecordService.js");
+const { formatMessage,printHostingCheckMessage } = require("../../../Presentation/CLI/systemCommands.js");
 const { createHorizontalTable } = require("../tableFormat.js");
-const { companyName } = require("../../../Infrastructure/config/config.js");
+
 
 module.exports = {
   name: "a",

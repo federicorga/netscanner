@@ -1,7 +1,5 @@
 const whois = require('whois-json');
 const { getRawWhois } = require('../../Infrastructure/repository/clients/servers/whoisClient.js');
-
-
 const dns = require('dns').promises;
 
 
