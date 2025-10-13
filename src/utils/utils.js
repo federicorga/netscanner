@@ -1,6 +1,8 @@
 const dns = require("dns");
 const net = require('net')
 const tls = require('tls');
+
+
 const { arrayCompanyIPs } = require("../Infrastructure/config/ipsValue.js");
 
 
@@ -36,6 +38,43 @@ async function getIp(dominio) { // Función para obtener la IP de un dominio
      throw new Error(`Error inesperado al obtener IP: ${error.message}`);
   };
 };
+
+
+
+
+/**
+ * Obtiene los headers HTTPS de un dominio o subdominio.
+ * @param {string} host - Dominio o subdominio (sin protocolo), por ejemplo: 'wavenet.com'
+ * @param {number} [port=443] - Puerto opcional (por defecto 443)
+ * @returns {Promise<object>} - Headers de respuesta
+ */
+function getHTTPHeadersFromHost(host, port = 443) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: host,
+      port: port,
+      path: '/',
+      method: 'GET',
+      rejectUnauthorized: false, // Permite conexiones con certs no válidos (opcional)
+      timeout: 5000
+    };
+
+    const req = https.request(options, (res) => {
+      resolve(res.headers);
+    });
+
+    req.on('error', (err) => {
+      reject(new Error(`Error al obtener headers de ${host}: ${err.message}`));
+    });
+
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error(`Timeout al conectar con ${host}`));
+    });
+
+    req.end();
+  });
+}
 
 
 
@@ -227,12 +266,22 @@ async function getRawSSLCertificate(host, port) { //conecta y obtiene el certifi
     }, () => {
       try {
         const cert = socket.getPeerCertificate(true); //el servidor remoto con el que estás haciendo la conexión TLS. El argumento true indica que quieres la cadena completa de certificados 
-        if (!cert || !cert.raw) {
+        if (!cert || !cert.raw) {  
           reject("❗[Error] No se pudo obtener el certificado (raw)");
           socket.end();
           return;
         }
-        resolve(cert);
+
+        const valid = socket.authorized;
+        const reasons = socket.authorized ? socket.authorizationError :"Desconocido";
+   // Crear un nuevo objeto que contenga el certificado y los datos de validación
+        const certWithValidation = {
+          ...cert, // Usar el operador de propagación para copiar todas las propiedades del certificado original
+          valid,
+          reasons
+        };
+      
+        resolve(certWithValidation);
         socket.end();
       } catch (e) {
         reject("❗[Error] al obtener certificado: " + e.message);

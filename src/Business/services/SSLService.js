@@ -24,9 +24,8 @@ async function getSSLCertificateInfo(host, port) {// Función para obtener infor
         timeout: 5000
       },
       () => {
-        const cert = socket.getPeerCertificate();
+        const cert = socket.getPeerCertificate(true);
      
-
         if (!cert || Object.keys(cert).length === 0) {
           reject("No se pudo obtener el certificado SSL");
         } else {
@@ -255,7 +254,9 @@ async function getCertificateSSLChain(cert) { //Chain es una cadena de certifica
   }
 
   return {
-    chain
+    chain,
+    valid:cert.valid,
+    reasons:currentCert.reasons
   };
 };
 
@@ -265,7 +266,7 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
   
 
   for (const cert of certChainObj.chain) {
-  console.log(cert)
+ 
     // Suponiendo que esta función obtiene el ID de crt.sh en base al serial (o sha1)
   let idcert = 'No disponible';
 
@@ -274,19 +275,25 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
       } catch (err) {
         idcert = 'No encontrado (crt.sh)';
       }
-    
+    serviceName = knownPortsServices.find(p => p.port === port)?.name || "Desconocido";
 
     info += `\n${consoleStyles.text.cyan}→ Puerto ${port} (${serviceName})::${consoleControl.resetStyle}\n`;
     info += `   🖥️ Server: ${consoleStyles.text.magenta}${cert.headers}${consoleControl.resetStyle}\n`;
-    info += `   📄 Dominio (CN): ${cert.subject}\n`;
+    info += `   📄 Common name (CN): ${cert.subject}\n`;
     info += `   🏢 Emisor: ${consoleStyles.text.yellow}${cert.issuer}${consoleControl.resetStyle}\n`;
-    info += `   🔑 Número de serie Certificado: ${cert.serial}\n`;
+    info += `   🔑 Serial Number: ${cert.serial}\n`;
     info += `   🔒 Huella SHA1: ${cert.sha1}\n`;
-    info += `   🌐 Ver Certificado: https://crt.sh/?q=${idcert}\n`;
+    info += `   👁️ Ver Certificado: https://crt.sh/?q=${idcert}\n`;
     info += `   📆 Desde: ${cert.valid_from} | ⏳ Hasta: ${cert.valid_to}\n`;
     info += `   🛡️ Dominios incluidos (SANs): ${consoleStyles.text.green}${cert.sans}${consoleControl.resetStyle}\n`;
-    info += `   📜 Certificado válido: ${cert.valid || 'No disponible'}\n`;
+   
   }
+
+   info += ` \n   📜 Certificado válido: ${certChainObj.valid? "Sí✅" : "No❌"}\n`;
+
+   if(!certChainObj.valid && certChainObj.reasons){
+   info += ` ${certChainObj.reasons}  `
+   }
 
   return info;
 }
@@ -313,7 +320,7 @@ async function pruebaSSL(input) {
 
  
 
-    const formattedInfo = await formatCertChainInfo(certChainObj, port, 'PLESK');
+    const formattedInfo = await formatCertChainInfo(certChainObj, port);
 
 
 

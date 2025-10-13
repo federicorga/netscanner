@@ -1,4 +1,5 @@
 const { defaultTimeout,logLines } = require("../../Infrastructure/config/config.js");
+const { getHTTPHeadersFromHost } = require("../../Infrastructure/network/getHTTPHeaders.js");
 const { getIp, isPortOpen} = require("../../utils/utils.js");
 const {getServerInfo } = require("../../utils/utils.js");
 
@@ -55,15 +56,17 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
     } else if (windowsResults.some((result) => result)) {
       osType = "Windows (RDP)";
     }
-
+    const header= await getHTTPHeadersFromHost(serverDate.hostname)
     // Devolver la información en lugar de solo imprimirla
     const info = `\n📌 Información del servidor:\n📍 IP: ${ipAddress}\n🏢 HostName: ${serverDate.hostname}\n🛠️ Panel de control: ${serverType}\n💽 Sistema operativo: ${osType}\n`;
-
     const tableData = [
   { Campo:"📍 IP", Valor: ipAddress },
   { Campo:"🏢 HostName", Valor: serverDate.hostname },
+  { Campo:"🖥️ Server Type", Valor: header.server || 'No disponible' },
   { Campo:"🔧 Panel Control", Valor: serverType },
-  { Campo:"💽 Sistema operativo", Valor: osType }
+  { Campo:"💽 Sistema operativo", Valor: osType },
+  { Campo:"🌐 Location", Valor: header.location || 'No disponible' },
+
 ];
 
 
