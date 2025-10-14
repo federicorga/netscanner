@@ -3,7 +3,7 @@ const os = require('os');
 
 async function pingHost(ipOrDomain) { // Función para hacer ping a una IP o dominio de forma asíncrona
     const stdouta = process.stdout; // Limpiamos la línea de salida
-    stdouta.write("⏳ Haciendo ping..."); // Mensaje de espera
+    stdouta.write("⏳ Comprobando latencia con ping..."); // Mensaje de espera
   
     const pingCommand = os.platform() === 'win32' ? `ping ${ipOrDomain} -n 4` : `ping ${ipOrDomain} -c 4`; // Detecta si es Windows o Unix/Linux/Mac
    

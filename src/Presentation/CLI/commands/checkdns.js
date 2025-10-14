@@ -13,9 +13,9 @@ module.exports = {
                 try {
                     const isHealthy = await checkDNSHealth(dnsIP.trim(), "example.com", "A");
                     if (isHealthy) {
-                        console.log("✅ El servidor DNS está operativo.");
+                        console.log(formatMessage("success","El servidor DNS está operativo."));
                     } else {
-                        console.log("❌ El servidor DNS NO responde. Puede que la IP ingresada no sea un servidor DNS válido o configurado.");
+                        console.log(formatMessage("notfound","El servidor DNS NO responde. Puede que la IP ingresada no sea un servidor DNS válido o configurado."));
                     }
                 } catch (err) {
                     console.error("❗ [Error] al chequear el servidor DNS:", err);

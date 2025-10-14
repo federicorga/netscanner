@@ -3,38 +3,28 @@ const { setDNSProvider } = require("../../Infrastructure/repository/clients/api/
 
 
 
-async function updateDNSProvider(opcion) {
-
-    let providerName;
- try {
-      switch (opcion) {
-        case "1":
-          providerName= setDNSProvider("googledns");
-          console.log("\n✅ Proveedor DNS configurado:", providerName);
-          
-          break;
-
-        case "2":
-          providerName= setDNSProvider("cloudflaredns");
-          console.log("\n✅ Proveedor DNS configurado:", providerName);
-         
-          break;
-
-        case "3":
-          providerName= setDNSProvider("wavenetdns");
-          console.log("\n✅ Proveedor DNS configurado:", providerName);
-         
-          break;
-  
-
-        default:
-          console.log("\n❌ Opción inválida.\n");
+async function updateDNSProviderService(opcion) {
+  let providerName;
+  try {
+    switch (opcion) {
+      case "1":
+        providerName = await setDNSProvider("googledns");
       
-          break;
-      }
-    } catch (error) {
-      console.error("❗ [Error] al configurar el proveedor:", error.message);
-    }
-}
+        return { success: true, message: "Proveedor DNS configurado",  provider:providerName };
 
-module.exports = { updateDNSProvider};
+      case "2":
+        providerName = await setDNSProvider("cloudflaredns");
+        return { success: true, message: "Proveedor DNS configurado", provider:providerName };
+
+      case "3":
+        providerName = await setDNSProvider("wavenetdns");
+        return { success: true, message: "Proveedor DNS configurado",  provider:providerName };
+
+      default:
+        return { success: false, message: "Opción inválida." };
+    }
+  } catch (error) {
+    return { success: false, message: `No se pudo configurar el proveedor: ${error.message}` };
+  }
+}
+module.exports = { updateDNSProviderService};

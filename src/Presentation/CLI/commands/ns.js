@@ -1,8 +1,5 @@
 const {nsLookupService } = require('../../../Business/services/DNSRecordServices/nsRecordService.js');
-const { getIpInfo } = require('../../../Infrastructure/repository/clients/api/ipInfoClient.js');
-const { formatMessage, consoleStyles, printHostingCheckMessage} = require('../../../Presentation/CLI/systemCommands.js');
-
-const Table = require("cli-table3");
+const { formatMessage,printHostingCheckMessage} = require('../../../Presentation/CLI/systemCommands.js');
 const { createTable, createHorizontalTable } = require('../tableFormat.js');
 const { getDomainWhois } = require('../../../Business/services/whoisService.js');
 

@@ -12,7 +12,7 @@ module.exports = {
                     const ssl = await pruebaSSL(dominio.trim());
                     console.log(ssl);
                 } catch (err) {
-                    console.error("❗ [Error] al obtener la información SSL:", err.message || err);
+                    console.error(formatMessage("error","No se pudo obtener la información SSL:", err.message || err));
                 }
                 resolve();
             });

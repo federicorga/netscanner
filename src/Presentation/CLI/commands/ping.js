@@ -1,4 +1,4 @@
-const { pingHost } = require('../../../Business/services/pingService.js');
+const { pingHost } = require('../../../Business/services/NetworkToolsServices/pingService.js');
 const { formatMessage} = require('../../../Presentation/CLI/systemCommands.js');
 
 module.exports = {

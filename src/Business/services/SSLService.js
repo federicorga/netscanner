@@ -1,6 +1,6 @@
 const { knownPortsServices } = require("../../Infrastructure/config/portsConfig.js");
 const { consoleStyles, consoleControl } = require("../../Presentation/CLI/systemCommands.js");
-const { isPortOpen, getRawSSLCertificate} = require("../../utils/utils.js");
+const { isPortOpen, getRawSSLCertificate, calculateDaysExpiration} = require("../../utils/utils.js");
 const https = require("https");
 const crypto = require('crypto');
 
@@ -263,7 +263,6 @@ async function getCertificateSSLChain(cert) { //Chain es una cadena de certifica
 
 async function formatCertChainInfo(certChainObj, port, serviceName = '') {
   let info = '';
-  
 
   for (const cert of certChainObj.chain) {
  
@@ -277,6 +276,8 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
       }
     serviceName = knownPortsServices.find(p => p.port === port)?.name || "Desconocido";
 
+    const daysExpiration = calculateDaysExpiration(cert.valid_to);
+
     info += `\n${consoleStyles.text.cyan}→ Puerto ${port} (${serviceName})::${consoleControl.resetStyle}\n`;
     info += `   🖥️ Server: ${consoleStyles.text.magenta}${cert.headers}${consoleControl.resetStyle}\n`;
     info += `   📄 Common name (CN): ${cert.subject}\n`;
@@ -284,9 +285,9 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
     info += `   🔑 Serial Number: ${cert.serial}\n`;
     info += `   🔒 Huella SHA1: ${cert.sha1}\n`;
     info += `   👁️ Ver Certificado: https://crt.sh/?q=${idcert}\n`;
-    info += `   📆 Desde: ${cert.valid_from} | ⏳ Hasta: ${cert.valid_to}\n`;
+    info += `   📆 Desde: ${cert.valid_from} |  Hasta: ${cert.valid_to}\n`;
+    info += `   ⏳ El certificado expira en: ${daysExpiration}\n`;
     info += `   🛡️ Dominios incluidos (SANs): ${consoleStyles.text.green}${cert.sans}${consoleControl.resetStyle}\n`;
-   
   }
 
    info += ` \n   📜 Certificado válido: ${certChainObj.valid? "Sí✅" : "No❌"}\n`;
@@ -301,6 +302,8 @@ async function formatCertChainInfo(certChainObj, port, serviceName = '') {
 
 
 async function pruebaSSL(input) {
+const stdout = process.stdout; // Limpiamos la línea de salida
+stdout.write("⏳ Buscando certificados SSL...");
   try {
 
       const [hostnameInput, portInput] = input.trim().split(" ");
@@ -321,7 +324,9 @@ async function pruebaSSL(input) {
  
 
     const formattedInfo = await formatCertChainInfo(certChainObj, port);
-
+  // Borrar la línea del "esperando..."
+    stdout.clearLine(0); // Limpia la línea
+    stdout.cursorTo(0);  // Mueve el cursor al inicio
 
 
     return formattedInfo;

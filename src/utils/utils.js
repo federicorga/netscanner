@@ -22,9 +22,9 @@ async function getIp(dominio) { // Función para obtener la IP de un dominio
             if(err){
              
               if (err.code === "ENOTFOUND" || err.code === "EAI_AGAIN") {
-              return reject(`Dominio no encontrado: ${dominio}`);
+              return reject(`Dominio not found: ${dominio}`);
               }  
-              return reject(`Error al resolver el dominio: ${err.message}`);
+              return reject(`No se pudo resolver el dominio: ${err.message}`);
               
             }
           // Devolver la IP si se encuentra
@@ -35,7 +35,7 @@ async function getIp(dominio) { // Función para obtener la IP de un dominio
     });
   } catch (error) {
 
-     throw new Error(`Error inesperado al obtener IP: ${error.message}`);
+     throw new Error(`No se puedo obtener IP: ${error.message}`);
   };
 };
 
@@ -64,7 +64,7 @@ function getHTTPHeadersFromHost(host, port = 443) {
     });
 
     req.on('error', (err) => {
-      reject(new Error(`Error al obtener headers de ${host}: ${err.message}`));
+      reject(new Error(`No se pudo obtener headers de ${host}: ${err.message}`));
     });
 
     req.on('timeout', () => {
@@ -93,7 +93,7 @@ function connectionTLS(host, port ,validationConnect=true) {// Esta función est
     });
 
     socket.on('error', (err) => {
-      reject(`Error en la conexión TLS: ${err.message}`);
+      reject(`Problema al realizar la conexión TLS: ${err.message}`);
     });
 
     socket.setTimeout(5000, () => {
@@ -203,6 +203,27 @@ function isCompanyIP(ip) { // Función para verificar si una IP pertenece a la e
 };
 
 
+function calculateDaysExpiration(expirationDateStr) {
+    // Convertir la fecha de expiración (string) a un objeto Date
+    const expirationDate = new Date(expirationDateStr);
+
+    // Obtener la fecha actual
+    const currentDate = new Date();
+
+    // Calcular la diferencia en milisegundos
+    const timeDifference = expirationDate - currentDate;
+
+    // Calcular la cantidad de días restantes
+    const daysRemaining = Math.floor(timeDifference / (1000 * 3600 * 24));
+
+    // Si la fecha ya ha pasado, retornamos 0 (o un mensaje de expiración)
+    if (daysRemaining < 0) {
+        return "Certificado expirado";
+    }
+
+    return `${daysRemaining} días`;
+}
+
 
 
 async function getServerInfo(ipOrDomain) {
@@ -217,7 +238,7 @@ async function getServerInfo(ipOrDomain) {
     return { hostname };
 
   } catch (error) {
-    console.error("Error al obtener el hostname:", error.message);
+    console.error("No se pudo obtener el hostname:", error.message);
     return { hostname: "No encontrado" };
   }
 }
@@ -267,7 +288,7 @@ async function getRawSSLCertificate(host, port) { //conecta y obtiene el certifi
       try {
         const cert = socket.getPeerCertificate(true); //el servidor remoto con el que estás haciendo la conexión TLS. El argumento true indica que quieres la cadena completa de certificados 
         if (!cert || !cert.raw) {  
-          reject("❗[Error] No se pudo obtener el certificado (raw)");
+          reject("No se pudo obtener el certificado (raw)");
           socket.end();
           return;
         }
@@ -284,13 +305,13 @@ async function getRawSSLCertificate(host, port) { //conecta y obtiene el certifi
         resolve(certWithValidation);
         socket.end();
       } catch (e) {
-        reject("❗[Error] al obtener certificado: " + e.message);
+        reject("No se pudo obtener certificado: " + e.message);
         socket.end();
       }
     });
 
     socket.on('error', (err) => {
-      reject(`❗[Error] al conectar por SSL: ${err.message}`);
+      reject(`NO se puede conectar por SSL: ${err.message}`);
     });
 
     socket.setTimeout(5000, () => {
@@ -334,4 +355,4 @@ async function normalizeToArray(data) { // convierte diferentes tipos de datos a
 
 
 
-module.exports={getIp,isCompanyIP,getPtr,getRawSSLCertificate,getServerInfo,isPortOpen,isPrivateIP,formatDate,normalizeToArray};
+module.exports={getIp,isCompanyIP,getPtr,getRawSSLCertificate,getServerInfo,isPortOpen,isPrivateIP,formatDate,normalizeToArray, calculateDaysExpiration};

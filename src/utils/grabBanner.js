@@ -38,7 +38,7 @@ function grabBanner(ip, port, timeout = 3000) {
     });
 
     socket.on('close', () => {
-      resolve(banner.trim() || `✅ Conectado (${port}) - sin banner`);
+      resolve(banner.trim() || `✅ Connected (${port}) - sin banner`);
     });
   });
 }
