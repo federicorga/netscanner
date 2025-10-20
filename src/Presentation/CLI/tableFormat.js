@@ -87,7 +87,7 @@ function createHorizontalTable(resultData, titleTable = "", maxColumnWidth = 30,
 
   console.log(table.toString());
   console.log("\n");
-}
+};
 
 
 

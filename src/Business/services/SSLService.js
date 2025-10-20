@@ -144,7 +144,7 @@ stdout.write("⏳ Buscando certificados SSL...");
      reason= "   ⚠️ El certificado no coincide con el dominio solicitado (probablemente sea el certificado del hostname del servidor)";
   }
   
-      info += `   ❗ Motivo: ${consoleStyles.text.red}$${cert.reason}${consoleControl.resetStyle}\n${reason}\n`;
+      info += `❗ Motivo: ${consoleStyles.text.red}$${cert.reason}${consoleControl.resetStyle}\n${reason}\n`;
     
     }
     };
@@ -152,7 +152,7 @@ stdout.write("⏳ Buscando certificados SSL...");
     info += `\n🔐 Certificados SSL: No detectado\n`;
   };
     if (sslErrors.length > 0) {
-  info += `\n❗ [Advertencia] detectadas en los siguientes puertos:\n`;
+  info += `\n detectadas en los siguientes puertos:\n`;
   sslErrors.forEach(err => {
     const serviceName = knownPortsServices.find(p => p.port === err.port)?.name || "Desconocido";
     info += `→ Puerto ${err.port} (${serviceName}):: ${consoleStyles.text.red}${err.error}${consoleControl.resetStyle}\n`;
@@ -167,7 +167,7 @@ function getCertificateFingerprints(cert) { // Función para obtener los fingerp
    // El certificado viene en formato PEM en cert.raw (buffer)
 
   if (!cert?.raw) {
-    throw new Error('❗ [Error] Certificado inválido o sin campo raw');
+    throw new Error('Certificado inválido o sin campo raw');
   }
 
   const rawCert = cert.raw; // Buffer con el certificado DER

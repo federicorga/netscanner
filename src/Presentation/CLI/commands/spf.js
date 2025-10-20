@@ -8,12 +8,12 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros SPF 📬🗄️: ")), async (dominio) => {
                 try {
-                    const spf= await SPFRecordService(dominio.trim());
-                    if(spf.data!=undefined){
-                    console.table(spf.data);}
-                    else{console.log(spf.message);}
+                    const result= await SPFRecordService(dominio.trim());
+                    if(result.data!=undefined){
+                    console.table(result.data);}
+                    else{console.log(result.message);}
                 } catch (err) {
-                    console.error( err);
+                  console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

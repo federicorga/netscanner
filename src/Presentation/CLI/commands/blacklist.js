@@ -10,7 +10,7 @@ module.exports = {
                 try {
                     await checkBlacklist(dominio.trim());
                 } catch (err) {
-                    console.error("❗ [Error] al verificar la blacklist:", err);
+                   console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

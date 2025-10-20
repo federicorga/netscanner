@@ -66,7 +66,7 @@ if(fullInput==='-f'){
 };
 
     } catch (err) {
-        return `❗ [Error] al consultar WHOIS o DNS: ${err.message}`;
+        return `NO se pudo consultar WHOIS o DNS: ${err.message}`;
     }
 };
 

@@ -1,6 +1,7 @@
 const { getRegister } = require("../../../Infrastructure/repository/clients/api/DNSClient.js");
-const { isCompanyIP, getIp, normalizeToArray } = require("../../../utils/utils.js");
+const { isCompanyIP, normalizeToArray } = require("../../../utils/utils.js");
 const { companyName } = require("../../../Infrastructure/config/config.js");
+const { getIp } = require("../../../Infrastructure/network/dnsAdapter.js");
 
 
 
@@ -51,6 +52,8 @@ async function nsLookupService(domain) {
         const nsDomain = (ns.data || ns.ns || "").toLowerCase();
 
         if (!nsDomain) continue; // Evitar errores si no hay datos
+
+        
      
         ipData= await getIp(nsDomain);
        

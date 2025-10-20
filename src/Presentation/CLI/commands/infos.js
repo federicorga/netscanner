@@ -10,10 +10,10 @@ module.exports = {
             rl.question(formatMessage("request",("\n🔎 Ingrese [IP o Dominio] para devolver la información del servidor asociado 🖥️: ")), async (dominio) => {
                 try {
                     const result= await scanServerInfo(dominio.trim());
-
+                    createHorizontalTable(result, "Información del Servidor 🖥️");
               
                 } catch (err) {
-                    console.error("❗ [Error] al obtener la información del servidor:", err);
+                  console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

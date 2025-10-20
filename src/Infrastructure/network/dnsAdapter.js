@@ -1,5 +1,6 @@
 const dns = require("dns");
 const net = require('net');
+
 async function getIp(domain) { // Función para obtener la IP de un dominio
   try{
     return new Promise((resolve, reject) => {

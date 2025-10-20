@@ -11,7 +11,7 @@ module.exports = {
                     const result = await getIpInfo(dominio.trim());
                     mostrarIpInfo(result);
                 } catch (err) {
-                    console.error("❗ [Error] al obtener información de IP:", err);
+                    console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

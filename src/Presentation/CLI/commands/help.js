@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { consoleStyles, consoleControl } = require('../../../Presentation/CLI/systemCommands.js');
 
+
 module.exports = {
     name: 'help',
     description: 'Muestra la lista de comandos disponibles.',
@@ -18,6 +19,8 @@ module.exports = {
                 }
             } catch (error) {
                 // No hacer nada si un archivo de comando no se puede cargar
+            
+        
             }
         }
 
@@ -36,7 +39,7 @@ module.exports = {
         });
 
        
-
+      
         console.log(helpOutput);
     }
 };

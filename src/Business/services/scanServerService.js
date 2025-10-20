@@ -1,7 +1,8 @@
-const { defaultTimeout,logLines } = require("../../Infrastructure/config/config.js");
+const { defaultTimeout } = require("../../Infrastructure/config/config.js");
 const { getIp, getPtr } = require("../../Infrastructure/network/dnsAdapter.js");
 const { getHTTPSHeadersFromHost } = require("../../Infrastructure/network/httpsAdapter.js");
 const { isPortOpen } = require("../../Infrastructure/network/tcpAdapter.js");
+
 
 
 
@@ -79,27 +80,25 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
     } else if (windowsResults.some((result) => result)) {
       osType = "Windows (RDP)";
     }
-    const header= await getHTTPSHeadersFromHost(serverDate.hostname)
+    let header= await getHTTPSHeadersFromHost(serverDate.hostname);
     // Devolver la información en lugar de solo imprimirla
-    const info = `\n📌 Información del servidor:\n📍 IP: ${ipAddress}\n🏢 HostName: ${serverDate.hostname}\n🛠️ Panel de control: ${serverType}\n💽 Sistema operativo: ${osType}\n`;
+  
+   
     const tableData = [
   { Campo:"📍 IP", Valor: ipAddress },
   { Campo:"🏢 HostName", Valor: serverDate.hostname },
-  { Campo:"🖥️ Server Type", Valor: header.server || 'No disponible' },
-  { Campo:"🔧 Panel Control", Valor: serverType },
+  { Campo: "🧊 ServerType", Valor: header.server || 'No disponible' },
+  { Campo:"🔧 Panel Control", Valor:serverType },
   { Campo:"💽 Sistema operativo", Valor: osType },
-  { Campo:"🌐 Location", Valor: header.location || 'No disponible' },
+
 
 ];
 
-
-    
-    logLines.push(tableData);
-    console.log(logLines);
-    return info; // Devuelves el resultado como un string
+ 
+    return tableData; // Devuelves el resultado como un string
   } catch (error) {  
 
-    return `⚠️ Error al escanear el servidor: ${error.message}`;
+    return `No se pudo escanear el servidor: ${error.message}`;
   }
 };
 

@@ -9,8 +9,8 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de certificado SSL 🔏​​: ")), async (dominio) => {
                 try {
-                    const ssl = await pruebaSSL(dominio.trim());
-                    console.log(ssl);
+                    const result = await pruebaSSL(dominio.trim());
+                    console.log(result);
                 } catch (err) {
                     console.error(formatMessage("error","No se pudo obtener la información SSL:", err.message || err));
                 }

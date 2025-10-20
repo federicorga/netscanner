@@ -1,21 +1,17 @@
 
 const net = require('net');
-const { getPtr, getIp } = require('../../../Infrastructure/network/dnsAdapter');
+const { getPtr } = require('../../../Infrastructure/network/dnsAdapter');
 
 
   async function getPtrRecord(ip) {
     try {
             // Validar si es una IP; si no lo es, resolvemos primero la IP del dominio
-
+     if(ip === null || ip.trim() ===""){
+       throw new Error ("La entrada no puede estar vacía.");
+    
+     }
 
      const hostnames= await getPtr(ip);
-
-     const esIp = net.isIP(ip);
-        if (!esIp) {
-          ip = await getIp(ip);
-        }
-
-    
      
       if (hostnames.length > 0) {
         const hostname = hostnames[0];
@@ -30,10 +26,11 @@ const { getPtr, getIp } = require('../../../Infrastructure/network/dnsAdapter');
   
         return `\n🔁 PTR de ${ip}: \n🖥️ Hostname: ${hostname}\n`;
       } else {
-        return "🔍 No tiene PTR asociado.";
+        return "\n🚫 No tiene PTR asociado.";
       }
     } catch (err) {
-      return `❗[Error] No se pudo resolver PTR para ${ip}: ${err.message}`;
+
+       throw new Error (`No se pudo resolver PTR para ${ip}: ${err.message}`);
     }
   }
 

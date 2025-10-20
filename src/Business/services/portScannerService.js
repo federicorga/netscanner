@@ -34,7 +34,7 @@ async function getPortsStatus(input) { //Muestra El estado de todos los puertos 
 }
         await scanPorts(ip, ports, timeout);
     } catch (err) {
-        console.error("❗ [Error] al escanear:", err);
+        console.error("No se pudo escanear:", err);
     }
 
 };
@@ -101,7 +101,7 @@ function checkPortStatus(ip,port,timeout = defaultTimeout) {// devuelve el estad
 function extractPortsFromStringToArray(input) { //Extrae de un string los puertos y los retorna en un array (lista) de forma ordenada.
     const portList = [];
     if (!input) {
-        console.error("❗ [Error]: Debes especificar los puertos a escanear. Ejemplo: '80,443' o '1-1024'");
+        console.error("Debes especificar los puertos a escanear. Ejemplo: '80,443' o '1-1024'");
         return []; // Devuelve array vacío para que no se escanee nada
     }
 

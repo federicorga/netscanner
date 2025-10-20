@@ -51,9 +51,6 @@ async function findDKIMSelector(domain) {
 
 
 
-
-
-
 function parseDKIM(txtArray) {// Convierte un TXT DKIM en objeto {clave: valor}
   // txtArray es un array de arrays: [ [ 'v=DKIM1; k=rsa; p=...' ] ]
   const joined = txtArray
@@ -73,9 +70,6 @@ function parseDKIM(txtArray) {// Convierte un TXT DKIM en objeto {clave: valor}
 }
 
 
-
-
-
 // Servicio para analizar y devolver los datos de DKIM
 async function DKIMLookupService(domain) {
 
@@ -85,7 +79,7 @@ async function DKIMLookupService(domain) {
     return result 
 }
 console.log(result)
-  const objectDKIM= parseDKIM(result.data); // Convierte el TXT DKIM en un objeto {clave: valor}
+const objectDKIM=parseDKIM(result.data); // Convierte el TXT DKIM en un objeto {clave: valor}
 
   return {
     ...result,

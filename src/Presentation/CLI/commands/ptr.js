@@ -8,10 +8,10 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio o IP] para la búsqueda de Dominio asociado PTR 🔁: ")), async (dominio) => {
                 try {
-                    const ptr = await getPtrRecord(dominio.trim());
-                    console.log(ptr);
+                    const result = await getPtrRecord(dominio.trim());
+                    console.log(result);
                 } catch (err) {
-                    console.error(formatMessage("error",("No se pudo obtener el registro PTR:"), err));
+                   console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

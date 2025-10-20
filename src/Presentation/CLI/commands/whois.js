@@ -12,11 +12,11 @@ module.exports = {
             rl.question(formatMessage("request",("\n🔎 Ingrese (Dominio o IP) para una consulta WHOIS❓: ")), async (dominio) => {
                 try {
                     
-                    const whois = await getDomainWhois(dominio.trim());
-                  createTable([whois.filedsWhois], "Registro WHOIS");
+                    const result = await getDomainWhois(dominio.trim());
+                  createTable([result.filedsWhois], "Registro WHOIS");
                   
                 } catch (err) {
-                    console.error("❗ [Error] al obtener el registro WHOIS:", err);
+                     console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

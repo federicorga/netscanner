@@ -18,7 +18,7 @@ module.exports = {
                         console.log(formatMessage("notfound","El servidor DNS NO responde. Puede que la IP ingresada no sea un servidor DNS válido o configurado."));
                     }
                 } catch (err) {
-                    console.error("❗ [Error] al chequear el servidor DNS:", err);
+                  console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

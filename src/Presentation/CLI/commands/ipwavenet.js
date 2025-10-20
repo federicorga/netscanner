@@ -15,7 +15,7 @@ module.exports = {
                         ? console.log(`✅ La IP pertenece a ${companyName}`)
                         : console.log(`❌ La IP no pertenece a ${companyName}`);
                 } catch (err) {
-                    console.error("❗ [Error] al verificar la IP:", err);
+                  console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

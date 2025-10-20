@@ -10,14 +10,16 @@ const https = require('https');
  * @param {number} [port=443] - Puerto opcional (por defecto 443)
  * @returns {Promise<object>} - Headers de respuesta
  */
+
+
 async function getHTTPSHeadersFromHost(host, port = 443) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const options = {
       hostname: host,
       port: port,
       path: '/',
       method: 'GET',
-      rejectUnauthorized: false, // Permite conexiones con certs no válidos (opcional)
+      rejectUnauthorized: false,
       timeout: 5000
     };
 
@@ -26,16 +28,23 @@ async function getHTTPSHeadersFromHost(host, port = 443) {
     });
 
     req.on('error', (err) => {
-      reject((`Error al obtener headers de ${host}: ${err.message}`));
+      if (err.code === 'ENOTFOUND' || err.code === 'EAI_AGAIN') {
+        console.warn(`🌐 No se pudo resolver el hostname "${host}": ${err.code}`);
+      } else {
+        console.error(`❌ Error al obtener headers de ${host}: ${err.message}`);
+      }
+      resolve({}); // Siempre devolvemos un objeto vacío para continuar el flujo
     });
 
     req.on('timeout', () => {
       req.destroy();
-      reject((`Timeout al conectar con ${host}`));
+      console.warn(`⏱️ Timeout al conectar con ${host}`);
+      resolve({});
     });
 
     req.end();
   });
 }
+
 
 module.exports = {getHTTPSHeadersFromHost };

@@ -8,11 +8,11 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese el serial para verificar si el certificado es válido 🔑: ")), async (serialssl) => {
                 try {
-                    const resultado = await getCrtShIdFromSHA1(serialssl.trim());
-                    console.log(`\n🆔 Número ID de Certificado: ${consoleStyles.text.green} ${resultado} ${consoleControl.resetStyle}`);
-                    console.log(`\n🔗 Url del Certificado:${consoleStyles.text.green} https://crt.sh/?q=${resultado}${consoleControl.resetStyle}`);
+                    const result = await getCrtShIdFromSHA1(serialssl.trim());
+                    console.log(`\n🆔 Número ID de Certificado: ${consoleStyles.text.green} ${result} ${consoleControl.resetStyle}`);
+                    console.log(`\n🔗 Url del Certificado:${consoleStyles.text.green} https://crt.sh/?q=${result}${consoleControl.resetStyle}`);
                 } catch (err) {
-                    console.error("❗ [Error] al obtener el serial:", err);
+                     console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

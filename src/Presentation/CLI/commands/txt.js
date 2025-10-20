@@ -20,7 +20,7 @@ module.exports = {
             }
 
                 } catch (err) {
-                    console.error("❗ [Error] al obtener los registros TXT:", err);
+                    console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

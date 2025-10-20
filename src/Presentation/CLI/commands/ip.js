@@ -1,5 +1,6 @@
+const { getIp } = require("../../../Infrastructure/network/dnsAdapter.js");
 const { formatMessage} = require("../../../Presentation/CLI/systemCommands.js");
-const { getIp } = require("../../../utils/utils.js");
+
 
 module.exports = {
     name: 'ip',
@@ -8,10 +9,11 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de IP 📍: ")), async (dominio) => {
                 try {
-                    const IP = await getIp(dominio.trim());
-                    console.log("\nIP:", IP);
+                    
+                    const result = await getIp(dominio.trim());
+                    console.log("\n📍IP:", result);
                 } catch (err) {
-                    console.error("❗ [Error] al obtener la IP:", err);
+                   console.error(`${formatMessage("error", err.message)} `)
                 }
                 resolve();
             });

@@ -1,8 +1,8 @@
 
-const net = require('net');
 
-const { extractPortsFromStringToArray } = require('../Business/services/portScannerService.js');
-const { portGroups } = require('../Infrastructure/config/portsConfig.js');
+const { extractPortsFromStringToArray } = require('./portScannerService.js');
+const { portGroups } = require('../../Infrastructure/config/portsConfig.js');
+const { grabBanner } = require('../../Infrastructure/network/tcpAdapter.js');
 
 /**
  * Intenta conectarse a un puerto TCP y leer el banner de bienvenida (si lo hay).
@@ -13,38 +13,7 @@ const { portGroups } = require('../Infrastructure/config/portsConfig.js');
  */
 
 
-function grabBanner(ip, port, timeout = 3000) {
-  return new Promise((resolve) => {
-    let banner = '🟢 '; // aqui se almacena el baner extraido de el puerto escaneado 
-    const socket = new net.Socket();
 
-    socket.setTimeout(timeout);
-
-    
-
-    socket.connect(port, ip, () => {
-      // Conexión establecida, esperar data
-    });
-
-    socket.on('data', (data) => {
-      banner += data.toString();
-      socket.destroy(); // cerrar después de recibir algo
-    });
-
-    socket.on('timeout', () => {
-      socket.destroy();
-      resolve(`⏱️ Timeout (${port})`);
-    });
-
-    socket.on('error', (err) => {
-      resolve(`❌ Error - (${port}): ${err.message}`);
-    });
-
-    socket.on('close', () => {
-      resolve(banner.trim() || `✅ Connected (${port}) - sin banner`);
-    });
-  });
-}
 
 
 async function getBannersFromInput(input) { //
