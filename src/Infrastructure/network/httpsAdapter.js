@@ -1,3 +1,6 @@
+// Conexiones HTTPS de alto nivel
+//si estás haciendo una petición HTTP segura (https.request())
+
 const https = require('https');
 
 
@@ -7,7 +10,7 @@ const https = require('https');
  * @param {number} [port=443] - Puerto opcional (por defecto 443)
  * @returns {Promise<object>} - Headers de respuesta
  */
-async function getHTTPHeadersFromHost(host, port = 443) {
+async function getHTTPSHeadersFromHost(host, port = 443) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: host,
@@ -35,4 +38,4 @@ async function getHTTPHeadersFromHost(host, port = 443) {
   });
 }
 
-module.exports = { getHTTPHeadersFromHost };
+module.exports = {getHTTPSHeadersFromHost };

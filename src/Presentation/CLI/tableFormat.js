@@ -1,10 +1,6 @@
 const Table = require("cli-table3");
 const { consoleStyles, colorMap } = require("./systemCommands");
 
-
-
-
-
 function createTable(resultData,titleTable= "",head = ["filed", "Value"], valueWidthAdjustment = 50, keyWidthAdjustment= 5) {
     // Obtener el ancho de la terminal
     const terminalWidth = process.stdout.columns;

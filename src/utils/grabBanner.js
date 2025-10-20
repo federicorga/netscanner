@@ -1,7 +1,8 @@
 
 const net = require('net');
-const { portGroups } = require('../Infrastructure/config/portGroups.js');
+
 const { extractPortsFromStringToArray } = require('../Business/services/portScannerService.js');
+const { portGroups } = require('../Infrastructure/config/portsConfig.js');
 
 /**
  * Intenta conectarse a un puerto TCP y leer el banner de bienvenida (si lo hay).
@@ -10,6 +11,8 @@ const { extractPortsFromStringToArray } = require('../Business/services/portScan
  * @param {number} timeout - Tiempo máximo en ms antes de cancelar.
  * @returns {Promise<string>} - Banner del servicio o descripción.
  */
+
+
 function grabBanner(ip, port, timeout = 3000) {
   return new Promise((resolve) => {
     let banner = '🟢 '; // aqui se almacena el baner extraido de el puerto escaneado 

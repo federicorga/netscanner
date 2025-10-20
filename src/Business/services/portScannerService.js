@@ -1,11 +1,13 @@
 
 const net = require("net");
-const { saveLogsToFile } = require("../../utils/logsSave.js");
+
 const {defaultTimeout,logLines}= require("../../Infrastructure/config/config.js");
-const { portGroups } = require("../../Infrastructure/config/portGroups.js");
+const { portGroups } = require("../../Infrastructure/config/portsConfig.js");
 const { knownPortsServices } = require("../../Infrastructure/config/portsConfig.js");
-const { getIp } = require("../../utils/utils.js");
+
 const { consoleStyles, consoleControl } = require("../../Presentation/CLI/systemCommands.js");
+const { getIp } = require("../../Infrastructure/network/dnsAdapter.js");
+const { saveLogsToFile } = require("../../Infrastructure/config/logsConfig.js");
 
 
 

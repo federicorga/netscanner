@@ -12,10 +12,8 @@ module.exports = {
             rl.question(formatMessage("request",(`🔎 Ingrese [IP] para verificar si pertenece a ${companyName} 🏠: `)), async (ip) => {
                 try {
                     isCompanyIP(ip.trim())
-                        ? console.log(`
-✅ La IP pertenece a ${companyName}`)
-                        : console.log(`
-❌ La IP no pertenece a ${companyName}`);
+                        ? console.log(`✅ La IP pertenece a ${companyName}`)
+                        : console.log(`❌ La IP no pertenece a ${companyName}`);
                 } catch (err) {
                     console.error("❗ [Error] al verificar la IP:", err);
                 }

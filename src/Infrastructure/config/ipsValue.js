@@ -1,20 +1,7 @@
-// Función para generar un rango de IPs
-function addIpRange(start, end) {
-  const ipArray = [];
-  const startParts = start.split('.').map(Number);
-  const endParts = end.split('.').map(Number);
-
-  for (let i = startParts[3]; i <= endParts[3]; i++) {
-    ipArray.push(`${startParts[0]}.${startParts[1]}.${startParts[2]}.${i}`);
-  }
-
-  return ipArray;
-};
-
 
 //IPS de de la empresa para evaluar si los servicios estan con ellos se puede agregar /24, /16, /8 o /28
-
-arrayCompanyIPs=[
+//Agregar las IPs en formato CIDR o IP individual
+let arrayCompanyIPs=[
 "45.173.0.0/24",
 "45.173.1.0/24",
 "45.173.2.0/24",

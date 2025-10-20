@@ -1,6 +1,6 @@
 
-const { getPtr, getIp } = require('../../../utils/utils.js');
 const net = require('net');
+const { getPtr, getIp } = require('../../../Infrastructure/network/dnsAdapter');
 
 
   async function getPtrRecord(ip) {

@@ -144,7 +144,7 @@ function clearConsole() {//Limpia la consola dependiendo del sistema operativo
 
 
 
-function getCommand(id) {
+function getCommand(id) { // Obtiene el nombre del comando por su ID
   const command = commands.find(cmd => cmd.id === id);
   if (command) {
     return `${consoleStyles.text.pink}${command.name}${consoleControl.resetStyle}`;  // Retorna solo el nombre

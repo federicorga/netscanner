@@ -1,7 +1,29 @@
 const { defaultTimeout,logLines } = require("../../Infrastructure/config/config.js");
-const { getHTTPHeadersFromHost } = require("../../Infrastructure/network/getHTTPHeaders.js");
-const { getIp, isPortOpen} = require("../../utils/utils.js");
-const {getServerInfo } = require("../../utils/utils.js");
+const { getIp, getPtr } = require("../../Infrastructure/network/dnsAdapter.js");
+const { getHTTPSHeadersFromHost } = require("../../Infrastructure/network/httpsAdapter.js");
+const { isPortOpen } = require("../../Infrastructure/network/tcpAdapter.js");
+
+
+
+
+
+async function getServerInfo(ipOrDomain) {
+  try {
+    const ip = await getIp(ipOrDomain); // Resuelve IP si se pasa un dominio
+
+    // Intenta hacer una consulta PTR (reverse DNS)
+    const result = await getPtr(ip);
+
+    const hostname = (Array.isArray(result) && result.length > 0) ? result[0] : "No encontrado";
+    
+    return { hostname };
+
+  } catch (error) {
+    console.error("No se pudo obtener el hostname:", error.message);
+    return { hostname: "No encontrado" };
+  }
+};
+
 
 
 
@@ -21,6 +43,7 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
     const linuxPorts = [22]; // SSH (Linux)
     const windowsPorts = [3389]; // RDP (Windows)
 
+    
     const ipAddress = await getIp(ip); // Obtener la IP de la entrada del usuario
     const serverDate= await getServerInfo(ip);
     // Función para comprobar si un puerto está abierto
@@ -56,7 +79,7 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
     } else if (windowsResults.some((result) => result)) {
       osType = "Windows (RDP)";
     }
-    const header= await getHTTPHeadersFromHost(serverDate.hostname)
+    const header= await getHTTPSHeadersFromHost(serverDate.hostname)
     // Devolver la información en lugar de solo imprimirla
     const info = `\n📌 Información del servidor:\n📍 IP: ${ipAddress}\n🏢 HostName: ${serverDate.hostname}\n🛠️ Panel de control: ${serverType}\n💽 Sistema operativo: ${osType}\n`;
     const tableData = [
@@ -75,7 +98,7 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
     console.log(logLines);
     return info; // Devuelves el resultado como un string
   } catch (error) {  
-    console.error("Error en scanServerInfo:", error);
+
     return `⚠️ Error al escanear el servidor: ${error.message}`;
   }
 };

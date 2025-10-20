@@ -11,7 +11,7 @@ module.exports = {
                     const ptr = await getPtrRecord(dominio.trim());
                     console.log(ptr);
                 } catch (err) {
-                    console.error("❗ [Error] al obtener el registro PTR:", err);
+                    console.error(formatMessage("error",("No se pudo obtener el registro PTR:"), err));
                 }
                 resolve();
             });

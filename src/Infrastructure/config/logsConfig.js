@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { logFilePath, logLines } = require("../Infrastructure/config/config.js");
+const { logFilePath, logLines } = require("./config.js");
 
 
 
