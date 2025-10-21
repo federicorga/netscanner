@@ -9,20 +9,15 @@ async function getCNAMERecord(dominio) {
 
         if (!raw.success) {
     
-        return {
-        message:raw.message,
-        success:raw.success
-        }; 
+        return raw;
+
         }
         
 
         const records = await normalizeToArray(raw.data.Answer);
  return{ 
-        success: raw.success,
-        message: raw.message,
+    ...raw,
         data: records,
-        error: raw.error,
-        meta: raw.meta
     };
     
  
@@ -43,19 +38,15 @@ async function getCNAMERecord(dominio) {
     
  if (!result.success) {
     return{
-        success: result.success,
+      ...result,
         message: `No se encontro registro CNAME para el dominio: ${domain}`,
-        data: result.data, // Devuelvo todas las IPs para referencia
-        error: null,
         meta: { ...result.meta, baseMessage: result.message },
     }
     }
 
         return {
-            success: result.success,
+            ...result,
             message: (`El dominio ${domain}tiene registros CNAME:`, result.data.Answer),
-            data: result.data,
-            error: null,
             meta: { ...result.meta, baseMessage: result.message },
         };
 

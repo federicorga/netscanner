@@ -16,7 +16,7 @@ module.exports = {
             }
             if (result.data && result.data.length > 0){
                 console.log(formatMessage("success", result.meta.baseMessage));
-                   createHorizontalTable(result.data, "Registro CNAME 🔀");
+                   createHorizontalTable(result.data, "Registro CNAME 🔀",55);
             }
                
                     

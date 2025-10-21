@@ -18,17 +18,17 @@ async function getDKIMRecord(domain, selector) {
     const records = await normalizeToArray(raw.data.Answer);
 
    return {
-            success: raw.success,
+            ...raw,
             message: `DKIM encontrado para "${domain}" con selector "${selector}.`,
             data: records,
-            error: null
+      
    }
   } catch (err) {
     return {
             success: false,
             message: `No se pudo consultar el registro DKIM para el dominio: ${domain}`,
             data: null,
-            error: err.message
+            error: err.message,
         };
   }
 };
@@ -40,7 +40,7 @@ async function findDKIMSelector(domain) {
   for (const selector of selectors) {
 
   const record = await getDKIMRecord(domain, selector);
-  
+
     if (record.success) {
       return record
     }
@@ -50,25 +50,21 @@ async function findDKIMSelector(domain) {
 };
 
 
+function parseDKIM(data) {
+  const result = {};
+  
+  // Asegurarse de eliminar cualquier espacio antes o después de los delimitadores
+  const pairs = data.split(';').map(part => part.trim()).filter(Boolean);
 
-function parseDKIM(txtArray) {// Convierte un TXT DKIM en objeto {clave: valor}
-  // txtArray es un array de arrays: [ [ 'v=DKIM1; k=rsa; p=...' ] ]
-  const joined = txtArray
-    .map(part => Array.isArray(part) ? part.join('') : part) // <-- FIX // unimos todo en un string
-    .join('');
-
-  const entries = joined.split(';').map(e => e.trim()).filter(Boolean); // separar por ;
-
-  const obj = {};
-  for (const entry of entries) {
-    const [key, ...rest] = entry.split('=');
-    if (key && rest.length > 0) {
-      obj[key.trim()] = rest.join('=').trim();// por si hay = en el valor
+  for (const pair of pairs) {
+    const [key, ...valueParts] = pair.split('=');
+    if (key && valueParts.length > 0) {
+      result[key.trim()] = valueParts.join('=').trim(); // Por si el valor contiene "=" como en la clave `p`
     }
   }
-  return obj;
-}
 
+  return result;
+}
 
 // Servicio para analizar y devolver los datos de DKIM
 async function DKIMLookupService(domain) {
@@ -78,8 +74,9 @@ async function DKIMLookupService(domain) {
   if (!result.success) {
     return result 
 }
-console.log(result)
-const objectDKIM=parseDKIM(result.data); // Convierte el TXT DKIM en un objeto {clave: valor}
+
+
+const objectDKIM= parseDKIM(result.data); // Convierte el TXT DKIM en un objeto {clave: valor}
 
   return {
     ...result,

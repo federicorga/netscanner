@@ -1,9 +1,11 @@
 
 const net = require("net");
-const { getIp } = require("../../../../utils/utils.js");
+const {getIp}= require("../../../network/dnsAdapter.js")
 
 async function getIpInfo(ip) {
 
+  
+  
       const esIp = net.isIP(ip);
         if (!esIp) {
           ip = await getIp(ip);
@@ -22,6 +24,7 @@ async function getIpInfo(ip) {
 
   };
 }
+
 
 
 function mostrarIpInfo(data) {

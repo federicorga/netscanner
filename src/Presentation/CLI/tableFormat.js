@@ -1,5 +1,5 @@
 const Table = require("cli-table3");
-const { consoleStyles, colorMap } = require("./systemCommands");
+const { consoleStyles, colorMap, formatMessage } = require("./systemCommands");
 
 function createTable(resultData,titleTable= "",head = ["filed", "Value"], valueWidthAdjustment = 50, keyWidthAdjustment= 5) {
     // Obtener el ancho de la terminal
@@ -46,7 +46,7 @@ function createTable(resultData,titleTable= "",head = ["filed", "Value"], valueW
 // Mapa de colores por campo
 function createHorizontalTable(resultData, titleTable = "", maxColumnWidth = 30, customColorMap = {}) {
   if (!resultData || resultData.length === 0) {
-    console.log("⚠️ No hay datos para mostrar.");
+    console.log( formatMessage("warning","No hay datos para mostrar."));
     return;
   }
 

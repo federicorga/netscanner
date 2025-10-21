@@ -10,8 +10,14 @@ module.exports = {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de registros DMARC 📧🔐: ")), async (dominio) => {
                 try {
                    const result= await DMARCRecordService(dominio.trim());
+
+                    if( result.success===false) {
+          
+              console.log(formatMessage("not_found", result.message)); //No se encontro registro A
+            }else{
                    
                      console.log('\n' + result.message + '\n');
+            }
                    
                   
                      createHorizontalTable(result.data, "Registro DMARC 🔐",55,{ Campo:consoleStyles.text.magenta,Descripcion:consoleStyles.text.lightgray});
