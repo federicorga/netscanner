@@ -1,4 +1,4 @@
-const { getPtrRecord } = require('../../../Business/services/DNSRecordServices/ptrRecordService.js');
+const { ptrLookupService } = require('../../../Business/services/DNSRecordServices/ptrRecordService.js');
 const { formatMessage} = require('../../CLI/systemCommands.js');
 
 module.exports = {
@@ -8,7 +8,8 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio o IP] para la búsqueda de Dominio asociado PTR 🔁: ")), async (dominio) => {
                 try {
-                    const result = await getPtrRecord(dominio.trim());
+                    
+                    const result = await ptrLookupService(dominio.trim());
                     console.log(result);
                 } catch (err) {
                    console.error(`${formatMessage("error", err.message)} `)

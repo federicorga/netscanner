@@ -3,6 +3,10 @@ const net = require('net');
 
 async function getIp(domain) { // Función para obtener la IP de un dominio
   try{
+       if(domain === null || domain.trim() ===""){
+       throw new Error ("La entrada no puede estar vacía.");
+    
+     }
     return new Promise((resolve, reject) => {
         const isIp = net.isIP(domain); // 4 para IPv4, 6 para IPv6, 0 si no es IP
            if (isIp) {

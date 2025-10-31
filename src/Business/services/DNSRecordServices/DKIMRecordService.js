@@ -50,21 +50,7 @@ async function findDKIMSelector(domain) {
 };
 
 
-function parseDKIM(data) {
-  const result = {};
-  
-  // Asegurarse de eliminar cualquier espacio antes o después de los delimitadores
-  const pairs = data.split(';').map(part => part.trim()).filter(Boolean);
 
-  for (const pair of pairs) {
-    const [key, ...valueParts] = pair.split('=');
-    if (key && valueParts.length > 0) {
-      result[key.trim()] = valueParts.join('=').trim(); // Por si el valor contiene "=" como en la clave `p`
-    }
-  }
-
-  return result;
-}
 
 // Servicio para analizar y devolver los datos de DKIM
 async function DKIMLookupService(domain) {
@@ -76,11 +62,9 @@ async function DKIMLookupService(domain) {
 }
 
 
-const objectDKIM= parseDKIM(result.data); // Convierte el TXT DKIM en un objeto {clave: valor}
-
   return {
     ...result,
-    data: objectDKIM,
+   
   };
 }
 

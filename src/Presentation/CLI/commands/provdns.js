@@ -9,7 +9,7 @@ module.exports = {
             console.log("🔧 Elegí un proveedor DNS:");
             console.log("1️  GoogleDNS");
             console.log("2  CloudflareDNS");
-            console.log("3  WavenetDNS");
+            console.log("3  WavenetDNS 45.173.0.46");
             rl.question("➡️ Ingresá el número de la opción: ", async (input) => {
 
                 try{

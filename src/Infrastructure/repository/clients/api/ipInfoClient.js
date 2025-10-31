@@ -27,18 +27,5 @@ async function getIpInfo(ip) {
 
 
 
-function mostrarIpInfo(data) {
-  console.log(`\n🆔 Información de IP/Dominio - IpInfo:\n`);
-  console.log(`🌐 IP: ${data.ip}`);
-  console.log(`🏢 Organización ISP: ${data.org}`);
-  console.log(`💻 Hostname: ${data.hostname}`);
-  console.log(`📍 Ciudad: ${data.city}`);
-  console.log(`🗺️ Región: ${data.region}`);
-  console.log(`🌍 País: ${data.country}`);
-  console.log(`📌 Coordenadas: ${data.loc}`);
-  console.log(`🏤 Código Postal: ${data.postal}`);
-  console.log(`🗺️ Mapa: https://www.google.com/maps?q=${data.loc}\n`);
-}
 
-
-module.exports = { getIpInfo,mostrarIpInfo };
+module.exports = { getIpInfo};

@@ -8,7 +8,11 @@ module.exports = {
         return new Promise(resolve => {
             rl.question(formatMessage("request",("\n🔎 Ingrese [IP o Dominio] para hacer traceroute ↪️: ")), async (dominio) => {
                 try {
+                      const stdouta = process.stdout;
+                     stdouta.write("⏳ Trazando ruta hasta el destino...");
                     const result = await tracerouteHost(dominio.trim());
+                    stdouta.clearLine(0);
+                    stdouta.cursorTo(0);
                     console.log(result);
                 } catch (err) {
                     formatMessage("error",`${err.message}`);

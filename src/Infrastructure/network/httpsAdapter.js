@@ -44,7 +44,37 @@ async function getHTTPSHeadersFromHost(host, port = 443) {
 
     req.end();
   });
-}
+};
 
 
-module.exports = {getHTTPSHeadersFromHost };
+async function getCrtShIdFromSHA1(sha1) { //Devuelve el ID del Certificado  pasando el SHA1 encontrado en la pagina CRT.SH
+  const url = `https://crt.sh/?q=${sha1}`;
+
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => data += chunk);
+      res.on('end', () => {
+        const regex = /\?id=(\d+)/g;
+        const matches = [];
+        let match;
+        while ((match = regex.exec(data)) !== null) {
+          matches.push(match[1]);
+        }
+        if (matches.length > 0) {
+          resolve(matches[0]); // Devuelvo el primer id encontrado
+    
+        } else {
+          reject(new Error('No se encontró ningún ID en la respuesta'));
+        }
+      });
+    }).on('error', (err) => {
+      reject(err);
+    });
+  });
+};
+
+
+
+module.exports = {getHTTPSHeadersFromHost,getCrtShIdFromSHA1 };

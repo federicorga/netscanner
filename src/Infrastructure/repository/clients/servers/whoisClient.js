@@ -1,17 +1,12 @@
+const whois = require('whois-json');
 
-const rawWhois = require('whois');
 
+async function getRawWhois(domain) { // Función para obtener el WHOIS crudo
+    const data = await whois(domain); // Obtener datos WHOIS en formato JSON
+    return data;
+            
+  
 
-function getRawWhois(domain) { // Función para obtener el WHOIS crudo
-    return new Promise((resolve, reject) => {
-
-        rawWhois.lookup(domain, (err, data) => {
-
-            if (err) reject(err);
-
-            else resolve(data); // Devolvemos el WHOIS crudo como una cadena de texto
-        });
-    });
 }
 
 

@@ -18,6 +18,8 @@ function generateListAllPorts(portGroups) { // Función para generar una lista p
   allPorts.sort((a, b) => a.port - b.port);
 
   return allPorts;
+
+
 }
 
 
@@ -25,6 +27,7 @@ function generateListAllPorts(portGroups) { // Función para generar una lista p
 const portsEmail={
     name: 'email',
     description: 'Puertos relacionados con servicios de correo electrónico',
+    hidden: false,
     ports: [
       { port: 25, service: 'SMTP' },
       { port: 465, service: 'SMTPS' },
@@ -43,6 +46,7 @@ const portsEmail={
   const portsSSL = {
   name: 'ssl',
   description: 'Puertos de servicios que usan SSL/TLS para conexiones seguras',
+  hidden: false,
   ports: [
     { port: 443, service: 'HTTPS' },
     { port: 465, service: 'SMTPS (SMTP sobre SSL)' },
@@ -61,6 +65,7 @@ const portsEmail={
   const portsWeb={
     name: 'web',
     description: 'Puertos relacionados con servicios HTTP/HTTPS y paneles web',
+    hidden: false,
     ports: [
   { port: 80, service: 'HTTP' },
   { port: 443, service: 'HTTPS' },
@@ -72,6 +77,7 @@ const portsEmail={
   const sistemOperativo={
     name: 'sistem',
     description: 'Puertos relacionados con sistemas operativos y servicios de infraestructura',
+    hidden: false,
     ports: [
     { port: 22, service: 'Linux SSH' },
     { port: 3389, service: 'Windows Remote Desktop Protocol (RDP)/Remote Desktop Services(RDS)' },
@@ -84,6 +90,7 @@ const portsEmail={
   const portPanels={
     name: 'panel',
     description: 'Puertos relacionados con paneles de control',
+    hidden: false,
     ports:[
   { port: 2082, service: 'cPanel (no seguro)' },
   { port: 2083, service: 'cPanel (seguro)' },
@@ -97,6 +104,7 @@ const portsEmail={
   const portsDatabase={
     name: 'db',
     description: 'Puertos utilizados por bases de datos',
+    hidden: false,
     ports: [
       { port: 1433, service: 'Microsoft SQL Server' },
       { port: 1521, service: 'Oracle DB' },
@@ -112,6 +120,7 @@ const portsEmail={
   const portsRemoteAccess={
     name: 'remote',
     description: 'Puertos para administración y acceso remoto',
+    hidden: false,
     ports: [
 
       { port: 23, service: 'Telnet' },
@@ -124,6 +133,7 @@ const portsEmail={
   const portsFileTransfer={
     name: 'ftp',
     description: 'Puertos relacionados con servicios de transferencia de archivos',
+    hidden: false,
     ports: [
       { port: 20, service: 'FTP (Data)' },
       { port: 21, service: 'FTP (Control)' },
@@ -136,6 +146,7 @@ const portsEmail={
     {
       name: 'red',
       description: 'Puertos relacionados con redes locales, compartición y servicios de infraestructura',
+      hidden: false,
       ports: [
         { port: 445, service: 'SMB' },
         { port: 135, service: 'RPC' },
@@ -152,6 +163,7 @@ const portsEmail={
     {
       name: 'print',
       description: 'Puertos relacionados con la impresora y servicios de impresion',
+      hidden: false,
       ports:[
         { port: 137, service: 'NetBIOS Name' },
          { port: 139, service: 'NetBIOS Session' },
@@ -168,6 +180,7 @@ const portsEmail={
   const portsInfra={
     name: 'infra',
     description: 'Servicios esenciales de red e infraestructura',
+    hidden: false,
     ports: [
       { port: 53, service: 'DNS' },
       { port: 67, service: 'DHCP (Server)' },
@@ -181,10 +194,14 @@ const portsEmail={
   const portsOther={
     name: 'other',
     description: 'Otros servicios menos comunes o específicos',
+    hidden: false,
     ports: [
       { port: 194, service: 'IRC' }
     ]
   };
+
+   
+
 
   const portGroups = {
   
@@ -204,9 +221,15 @@ const portsEmail={
     // Ejemplo: ftp: portsFileTransfer,
   };
 
-
   const knownPortsServices = generateListAllPorts(portGroups);
 
-  
+
+  portGroups.all = {
+  name: 'all',
+  description: 'Escaneo de todos los puertos conocidos',
+  ports: knownPortsServices,
+  hidden: true  // 👈 no mostrar en la tabla
+};
+
   
   module.exports = { portGroups, knownPortsServices };

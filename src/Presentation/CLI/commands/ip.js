@@ -10,8 +10,8 @@ module.exports = {
             rl.question(formatMessage("request",("\n🔎 Ingrese [Dominio] para la búsqueda de IP 📍: ")), async (dominio) => {
                 try {
                     
-                    const result = await getIp(dominio.trim());
-                    console.log("\n📍IP:", result);
+                const result = await getIp(dominio.trim());
+                console.log("\n📍IP:", result);
                 } catch (err) {
                    console.error(`${formatMessage("error", err.message)} `)
                 }

@@ -42,7 +42,7 @@ async function getPortsStatus(input) { //Muestra El estado de todos los puertos 
 
 async function scanPorts(networkAddress,ports,timeout) {// Escanea los puertos de la IP o Dominio (Direcciones de red).
     const now = new Date().toLocaleString();
-         const ipAddress = await getIp(networkAddress); // Esperamos a que obtenerIP resuelva la IP antes de continuar
+    const ipAddress = await getIp(networkAddress); // Esperamos a que obtenerIP resuelva la IP antes de continuar
 
     const header = `\n🔍 Escaneando puertos de entrada en ${consoleStyles.text.orange} 🌐 ${ipAddress} ${consoleControl.resetStyle} con timeout de ${consoleStyles.text.orange}${timeout}${consoleControl.resetStyle} ms...\n`;
     console.log(header);
@@ -92,9 +92,6 @@ function checkPortStatus(ip,port,timeout = defaultTimeout) {// devuelve el estad
         });
     });
 };
-
-
-
 
 
 

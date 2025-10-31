@@ -1,10 +1,6 @@
 const { defaultTimeout } = require("../../Infrastructure/config/config.js");
 const { getIp, getPtr } = require("../../Infrastructure/network/dnsAdapter.js");
-const { getHTTPSHeadersFromHost } = require("../../Infrastructure/network/httpsAdapter.js");
 const { isPortOpen } = require("../../Infrastructure/network/tcpAdapter.js");
-
-
-
 
 
 
@@ -25,30 +21,19 @@ async function getServerInfo(ipOrDomain) {
   }
 };
 
+async function getServicesInfo(ip,timeout=defaultTimeout){ // Función para escanear servicios
 
-
-
-
-async function scanServerInfo(ip, timeout=defaultTimeout) {
-  const stdout = process.stdout; // Limpiamos la línea de salida
-  let serverType = "Desconocido";
+   let panelType = "Desconocido";
   let osType = "Desconocido";
-
-  try {
-    // Mostrar mensaje de espera
-    stdout.write("⏳ Analizando servidor...");
-
+  let header= "Desconocido" //await getHTTPSHeadersFromHost(serverDate.hostname);
+    // Devolver la información en lugar de solo imprimirla
+  
     // Puertos para cPanel, Plesk, Linux y Windows
     const cPanelPorts = [2083, 2087, 2082, 2095, 2096]; // cPanel
     const pleskPorts = [8443, 8880]; // Plesk
     const linuxPorts = [22]; // SSH (Linux)
     const windowsPorts = [3389]; // RDP (Windows)
 
-    
-    const ipAddress = await getIp(ip); // Obtener la IP de la entrada del usuario
-    const serverDate= await getServerInfo(ip);
-    // Función para comprobar si un puerto está abierto
-   
 
     // Comprobamos los puertos de cPanel y Plesk
     const cPanelPromises = cPanelPorts.map((port) => isPortOpen(ip,port,timeout));
@@ -63,15 +48,13 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
       Promise.all(windowsPromises),
     ]);
 
-    // Borrar la línea del "esperando..."
-    stdout.clearLine(0); // Limpia la línea
-    stdout.cursorTo(0);  // Mueve el cursor al inicio
+
 
     // Detectar cPanel o Plesk
     if (cPanelResults.some((result) => result)) {
-      serverType = "cPanel";
+      panelType = "cPanel";
     } else if (pleskResults.some((result) => result)) {
-      serverType = "Plesk";
+      panelType = "Plesk";
     }
 
     // Detectar si es Linux o Windows
@@ -80,21 +63,30 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
     } else if (windowsResults.some((result) => result)) {
       osType = "Windows (RDP)";
     }
-    let header= await getHTTPSHeadersFromHost(serverDate.hostname);
-    // Devolver la información en lugar de solo imprimirla
+
+
+    return { panelType, osType, header };
   
+}
+
+
+async function scanServerService(domainOrIp) {
+
+  try {
    
-    const tableData = [
+  const ipAddress = await getIp(domainOrIp);
+  const serverDate= await getServerInfo(domainOrIp);
+  const service= await getServicesInfo(ipAddress);
+   
+  const tableData = [
   { Campo:"📍 IP", Valor: ipAddress },
   { Campo:"🏢 HostName", Valor: serverDate.hostname },
-  { Campo: "🧊 ServerType", Valor: header.server || 'No disponible' },
-  { Campo:"🔧 Panel Control", Valor:serverType },
-  { Campo:"💽 Sistema operativo", Valor: osType },
-
+  { Campo: "🧊 ServerType", Valor: service.header },
+  { Campo:"🔧 Panel Control", Valor:service.panelType },
+  { Campo:"💽 Sistema operativo", Valor: service.osType },
 
 ];
 
- 
     return tableData; // Devuelves el resultado como un string
   } catch (error) {  
 
@@ -103,4 +95,4 @@ async function scanServerInfo(ip, timeout=defaultTimeout) {
 };
 
 
-module.exports = { scanServerInfo};
+module.exports = { scanServerService};

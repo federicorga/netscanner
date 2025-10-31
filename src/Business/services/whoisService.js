@@ -1,19 +1,19 @@
-const whois = require('whois-json');
+
 const { getRawWhois } = require('../../Infrastructure/repository/clients/servers/whoisClient.js');
 const dns = require('dns').promises;
 
 
 
-async function getDomainWhois(input) {
+async function whoisService(input) {
     try {
 
-            const [domainInput, fullInput] = input.trim().split(" ");
+    const [domainInput, fullInput] = input.trim().split(" ");
 
     const domain = domainInput;
    
         
-        const data = await whois(domain); // Obtener datos WHOIS en formato JSON
-        const rawData = await getRawWhois(domain); // Obtener WHOIS crudo como texto
+       
+        const data= await getRawWhois(domain); 
         
 
         let ipAddress = 'No se pudo resolver la IP';
@@ -58,11 +58,8 @@ if(fullInput==='-f'){
         filedsWhois: data,
     }
 }
-
-    return {
-       
-    filedsWhois:foundFields,
-    
+    return {     
+    filedsWhois:foundFields, 
 };
 
     } catch (err) {
@@ -70,4 +67,4 @@ if(fullInput==='-f'){
     }
 };
 
-module.exports = { getDomainWhois};
+module.exports = { whoisService};

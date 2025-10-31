@@ -35,5 +35,18 @@ const { getPtr } = require('../../../Infrastructure/network/dnsAdapter');
   }
 
 
+  async function ptrLookupService(ip) {
+    const result = await getPtrRecord(ip);
 
-  module.exports = { getPtrRecord};
+    if (!result.success) {
+      return result
+    }
+
+    return {
+      ...result,
+    };
+  }
+
+
+
+  module.exports = { ptrLookupService};
