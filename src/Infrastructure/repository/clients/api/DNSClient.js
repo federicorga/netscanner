@@ -66,7 +66,7 @@ function setDNSProvider(providerName) {
             break;
 
         case "wavenetdns":
-            currentProvider = new CustomDNS("45.173.0.46"); 
+            currentProvider = new CustomDNS("9.9.9.9"); 
 
             break;  
         default:

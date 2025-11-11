@@ -6,7 +6,7 @@ const https = require('https');
 
 /**
  * Obtiene los headers HTTPS de un dominio o subdominio.
- * @param {string} host - Dominio o subdominio (sin protocolo), por ejemplo: 'wavenet.com'
+ * @param {string} host - Dominio o subdominio (sin protocolo), por ejemplo: 'dominio.com'
  * @param {number} [port=443] - Puerto opcional (por defecto 443)
  * @returns {Promise<object>} - Headers de respuesta
  */

@@ -14,12 +14,12 @@ module.exports = {
           console.log('\n' + result.message + '\n');
 
           if (result.data) {
-            console.log(result.data)
+          
           
             createHorizontalTable(result.data, "Registro DKIM 🛡️")
 
         
-            //console.log('\n🔐 Clave "p" completa :\n', result.data[0].p);
+              console.log(result.data)
           }
 
         } catch (err) {

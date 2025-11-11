@@ -14,8 +14,8 @@ async function getIpInfo(ip) {
   const data = await res.json();
   return {
   ip: data.ip,             // 📍 La IP consultada (ej. "45.173.0.50")
-  org: data.org,           // 🏢 ISP Organización a la que está asignada la IP (ej. "AS61451 WAVENET S.A.")
-  hostname: data.hostname, // 🌐 Nombre de host (DNS inverso) asociado a la IP (ej. "v5.wavenet.com")
+  org: data.org,           // 🏢 ISP Organización a la que está asignada la IP 
+  hostname: data.hostname, // 🌐 Nombre de host (DNS inverso) asociado a la IP 
   city: data.city,         // 🏙️ Ciudad aproximada desde donde se usa la IP (ej. "Buenos Aires")
   region: data.region,     // 🗺️ Región o provincia (ej. "Buenos Aires F.D.")
   country: data.country,   // 🌍 Código de país (ej. "AR" para Argentina)

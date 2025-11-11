@@ -1,11 +1,11 @@
 const { isCompanyIP } = require('../../../utils/utils.js');
 const { companyName } = require('../../../Infrastructure/config/config.js');
-const { formatMessage} = require('../../../Presentation/CLI/systemCommands.js');
+const { formatMessage} = require('../systemCommands.js');
 
 
 
 module.exports = {
-    name: 'ipwavenet',
+    name: `ip${companyName}`,
     description: `Verifica si una [IP] pertenece a ${companyName}.`,
     execute(rl) {
         return new Promise(resolve => {

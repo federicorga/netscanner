@@ -22,6 +22,6 @@ let arrayCompanyIPs=[
 ];
 
 //const rangeIps =addIpRange("200.61.185.193", "200.61.185.206");
-//arrayCompanyIPs.push(...rangeIps); // Agrega el rango de IPs al array de Wavenet
+//arrayCompanyIPs.push(...rangeIps); // Agrega el rango de IPs al array 
 
 module.exports = {arrayCompanyIPs};

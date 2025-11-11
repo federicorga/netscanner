@@ -138,7 +138,7 @@ async function normalizeToArray(data) { // convierte diferentes tipos de datos a
     return data; // ya son registros completos
   }
 
-  // Caso objeto individual (por ejemplo, Wavenet con { ip })
+  // Caso objeto individual (por ejemplo, Empresa con { ip })
   if (typeof data === 'object') {
     return [data]; // lo envolvemos en un array
   }

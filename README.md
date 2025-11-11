@@ -54,8 +54,8 @@ La aplicación proporciona los siguientes comandos:
 | `blacklist`   | Comprueba si una IP está en una lista negra.                        |
 | `banner`      | Obtiene el banner de un servicio.                           |
 | `ssl`         | Obtiene información del certificado SSL.                         |
-| `ipwavenet`   | Comprueba si una IP pertenece a Wavenet.                       |
-| `ipadm`       | Enumera los rangos de IP de Wavenet.                                |
+| `ipcompany`   | Comprueba si una IP pertenece a la empresa.                       |
+| `ipadm`       | Enumera los rangos de IP de la empresa.                                |
 | `ip`          | Obtiene la dirección IP de un dominio.                          |
 
 ## Cómo ejecutar la aplicación

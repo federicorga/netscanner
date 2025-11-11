@@ -1,7 +1,8 @@
 const {nsLookupService } = require('../../../Business/services/DNSRecordServices/nsRecordService.js');
+const { whoisService } = require('../../../Business/services/whoisService.js');
 const { formatMessage,printHostingCheckMessage} = require('../../../Presentation/CLI/systemCommands.js');
 const { createTable, createHorizontalTable } = require('../tableFormat.js');
-const { getDomainWhois } = require('../../../Business/services/whoisService.js');
+
 
 module.exports = {
     name: 'ns',
@@ -27,8 +28,8 @@ module.exports = {
                    
                     if(!result.success.isCompany){  
                         console.log(`\n🔍 Entidad que gestiona el dominio: \n`);
-
-                        const WhoisInfo= await getDomainWhois(dominio.trim());
+                        
+                        const WhoisInfo= await whoisService(dominio.trim());
                         createTable([WhoisInfo.filedsWhois], "Información WHOIS❓");
                     }
                     
